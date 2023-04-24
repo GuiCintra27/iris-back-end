@@ -1,0 +1,165 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model admin_sessions {
+  id         Int      @id(map: "admin sessions_pk") @default(autoincrement())
+  adminId    Int
+  token      String   @unique
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+  admins     admins   @relation(fields: [adminId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "admin-sessions_fk0")
+
+  @@map("admin-sessions")
+}
+
+model admins {
+  id             Int              @id(map: "admins_pk") @default(autoincrement())
+  cpf            String           @unique @db.VarChar(11)
+  email          String           @unique
+  name           String
+  photo          String
+  birthDay       DateTime         @db.Date
+  password       String
+  created_at     DateTime         @default(now())
+  updated_at     DateTime         @updatedAt
+  admin_sessions admin_sessions[]
+  posts          posts[]
+}
+
+model contact {
+  id         Int      @id(map: "contact_pk") @default(autoincrement())
+  name       String
+  email      String
+  telephone  String   @db.VarChar(11)
+  message    String
+  userId     Int
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+  users      users    @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "contact_fk0")
+}
+
+model donates {
+  id         Int      @id(map: "donates_pk") @default(autoincrement())
+  userId     Int
+  amount     Int
+  visualized Boolean  @default(false)
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+  users      users    @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "donates_fk0")
+}
+
+model genders {
+  id         Int      @id(map: "genders_pk") @default(autoincrement())
+  name       String   @unique
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+  users      users[]
+}
+
+model newsletter {
+  id         Int      @id(map: "newsLetter_pk") @default(autoincrement())
+  email      String   @unique
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+}
+
+model offices {
+  id         Int          @id(map: "offices_pk") @default(autoincrement())
+  name       String       @unique
+  created_at DateTime     @default(now())
+  updated_at DateTime     @updatedAt
+  volunteers volunteers[]
+}
+
+model posts {
+  id         Int      @id(map: "posts_pk") @default(autoincrement())
+  adminId    Int
+  text       String
+  image      String
+  likes      Int      @default(0)
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+  admins     admins   @relation(fields: [adminId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "posts_fk0")
+}
+
+model pronouns {
+  id         Int      @id(map: "pronouns_pk") @default(autoincrement())
+  name       String   @unique
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+  users      users[]
+}
+
+model sessions {
+  id         Int      @id(map: "sessions_pk") @default(autoincrement())
+  userId     Int
+  token      String   @unique
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+  users      users    @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "sessions_fk0")
+}
+
+model sexualities {
+  id         Int      @id(map: "sexualities_pk") @default(autoincrement())
+  name       String   @unique
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+  users      users[]
+}
+
+model skincolor {
+  id         Int          @id(map: "skinColor_pk") @default(autoincrement())
+  name       String       @unique
+  created_at DateTime     @default(now())
+  updated_at DateTime     @updatedAt
+  volunteers volunteers[]
+}
+
+model users {
+  id          Int          @id(map: "users_pk") @default(autoincrement())
+  name        String
+  email       String       @unique
+  phoneNumber String       @unique @db.VarChar(11)
+  birthDay    DateTime     @db.Date
+  sexualityId Int
+  genderId    Int
+  pronounsId  Int
+  password    String
+  created_at  DateTime     @default(now())
+  updated_at  DateTime     @updatedAt
+  sexualities sexualities  @relation(fields: [sexualityId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "users_fk0")
+  genders     genders      @relation(fields: [genderId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "users_fk1")
+  pronouns    pronouns     @relation(fields: [pronounsId], references: [id])
+  contact     contact[]
+  donates     donates[]
+  sessions    sessions[]
+  volunteers  volunteers[]
+
+  @@index([email])
+}
+
+model volunteers {
+  id              Int       @id(map: "volunteers_pk") @default(autoincrement())
+  userId          Int       @unique
+  linkedIn        String?   @default("Não informado, ou não possui")
+  irisParticipant Boolean
+  occupation      String
+  skinColorId     Int
+  officeId        Int
+  applyingReason  String
+  experience      String?   @default("Não informada, ou não possui")
+  visualized      Boolean   @default(false)
+  created_at      DateTime  @default(now())
+  updated_at      DateTime  @updatedAt
+  users           users     @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "volunteers_fk0")
+  skincolor       skincolor @relation(fields: [skinColorId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "volunteers_fk1")
+  offices         offices   @relation(fields: [officeId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "volunteers_fk2")
+
+  @@index([id])
+}
