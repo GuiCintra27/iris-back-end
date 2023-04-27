@@ -5,3 +5,4 @@ export * from "./contact-controller";
 export * from "./post-controller";
 export * from "./donate-controller";
 export * from "./volunteer-controller";
+export * from "./topics-controller";

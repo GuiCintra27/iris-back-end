@@ -1,5 +1,6 @@
 generator client {
   provider = "prisma-client-js"
+  binaryTargets = ["native", "debian-openssl-3.0.x"]
 }
 
 datasource db {
@@ -80,12 +81,15 @@ model offices {
 model posts {
   id         Int      @id(map: "posts_pk") @default(autoincrement())
   adminId    Int
+  topicId    Int
+  title      String
   text       String
   image      String
   likes      Int      @default(0)
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
   admins     admins   @relation(fields: [adminId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "posts_fk0")
+  topics     topics   @relation(fields: [topicId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "topics_fk0")
 }
 
 model pronouns {
@@ -162,4 +166,10 @@ model volunteers {
   offices         offices   @relation(fields: [officeId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "volunteers_fk2")
 
   @@index([id])
+}
+
+model topics {
+  id      Int      @id(map: "topics_pk") @default(autoincrement())
+  name    String
+  posts   posts[]
 }

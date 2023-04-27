@@ -13,6 +13,8 @@ async function findMany(): Promise<GetPost[]> {
   return await prisma.posts.findMany({
     select: {
       id: true,
+      title: true,
+      topics: true,
       text: true,
       image: true,
       likes: true,
@@ -47,7 +49,7 @@ async function updateLikes(id: number, value: number) {
   });
 }
 
-export type GetPost = Omit<PostParams, "adminId"> & { admins: { name: string; photo: string } };
+export type GetPost = Omit<PostParams, "adminId" | "topicId"> & { admins: { name: string; photo: string } };
 
 export type PostParams = Omit<posts, "id" | "created_at" | "updated_at">;
 
