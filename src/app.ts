@@ -15,6 +15,7 @@ import {
   contactRouter,
   postRouter,
   donateRouter,
+  topicsRouter,
 } from "./routers";
 import { volunteerRouter } from "./routers/volunteer-router";
 
@@ -29,7 +30,8 @@ app
   .use("/contact", contactRouter)
   .use("/posts", postRouter)
   .use("/donate", donateRouter)
-  .use("/volunteer", volunteerRouter);
+  .use("/volunteer", volunteerRouter)
+  .use("/topics", topicsRouter);
 
 export function init(): Promise<Express> {
   connectDb();

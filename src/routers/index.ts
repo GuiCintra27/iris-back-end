@@ -4,3 +4,4 @@ export * from "./news-letter-router";
 export * from "./contact-router";
 export * from "./post-router";
 export * from "./donate-router";
+export * from "./topics-router";
