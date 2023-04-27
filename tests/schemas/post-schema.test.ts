@@ -2,6 +2,8 @@ import { createPostSchema } from "../../src/schemas";
 import { faker } from "@faker-js/faker";
 
 const generateValidInput = () => ({
+  title: faker.lorem.sentences(10),
+  topicId: 1,
   text: faker.lorem.sentences(10),
   image: faker.internet.url(),
 });
@@ -17,7 +19,7 @@ describe("createPostSchema", () => {
     it("should return error if text does not follow valid text format", () => {
       const input = generateValidInput();
 
-      const { error } = createPostSchema.validate({...input, text: faker.datatype.number()});
+      const { error } = createPostSchema.validate({ ...input, text: faker.datatype.number() });
 
       expect(error).toBeDefined();
     });
