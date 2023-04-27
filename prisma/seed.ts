@@ -1,8 +1,9 @@
-import { genders, offices, posts, Prisma, PrismaClient, pronouns, sexualities, skincolor } from "@prisma/client";
+import { genders, offices, posts, Prisma, PrismaClient, pronouns, sexualities, skincolor, topics } from "@prisma/client";
 import { textOne, textTwo } from "./blogTexts";
 const prisma = new PrismaClient();
 
 async function main() {
+  let topics: topics[] | Prisma.BatchPayload = await prisma.topics.findMany();
   let sexualities: sexualities[] | Prisma.BatchPayload = await prisma.sexualities.findMany();
   let genders: genders[] | Prisma.BatchPayload = await prisma.genders.findMany();
   let pronouns: pronouns[] | Prisma.BatchPayload = await prisma.pronouns.findMany();
@@ -10,6 +11,21 @@ async function main() {
   let skincolor: skincolor[] | Prisma.BatchPayload = await prisma.skincolor.findMany();
   let posts: posts[] | Prisma.BatchPayload = await prisma.posts.findMany();
   let admin = await prisma.admins.findFirst();
+
+  if (topics.length < 6) {
+    await prisma.topics.deleteMany();
+
+    topics = await prisma.topics.createMany({
+      data: [
+        { name: "Artigos de Opinião" },
+        { name: "Íris News" },
+        { name: "Entrevistas" },
+        { name: "Íris Indica" },
+        { name: "Íris Comenta" },
+        { name: "Outros" },
+      ],
+    });
+  }
 
   if (sexualities.length < 6) {
     await prisma.sexualities.deleteMany();
@@ -113,11 +129,15 @@ async function main() {
       data: [
         {
           adminId: admin.id,
+          title: 'Título 1',
+          topicId: 1,
           text: textOne,
           image: "https://i.imgur.com/YFby08q.png",
         },
         {
           adminId: admin.id,
+          title: 'Título 2',
+          topicId: 2,
           text: textTwo,
           image: "https://i.imgur.com/u4Kc3Lu.png",
         },
@@ -135,3 +155,4 @@ main()
   .finally(async () => {
     await prisma.$disconnect();
   });
+  
