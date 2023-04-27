@@ -2,7 +2,6 @@ import topicsService from "@/services/topics-service";
 import { Request, Response } from "express";
 import httpStatus from "http-status";
 
-
 export async function getTopics(req: Request, res: Response) {
     try {
       const topicsData = await topicsService.getTopicsData();

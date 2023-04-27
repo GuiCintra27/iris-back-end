@@ -1,8 +1,8 @@
 import { Router } from "express";
-import {  } from "../controllers";
+import { getTopics } from "../controllers";
 
 const topicsRouter = Router();
 
-topicsRouter.get("/", );
+topicsRouter.get("/", getTopics);
 
 export { topicsRouter };
