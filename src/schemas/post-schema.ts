@@ -2,6 +2,8 @@ import { PostParams } from "../repositories/post-repository";
 import Joi from "joi";
 
 export const createPostSchema = Joi.object<Omit<PostParams, "adminId" | "likes">>({
+  title: Joi.string().required(),
+  topicId: Joi.number().required(),
   text: Joi.string().required(),
   image: Joi.string().uri().required(),
 });
