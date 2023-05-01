@@ -1,5 +1,5 @@
 import { notFoundError, unprocessableContent } from "../../errors";
-import postRepository, { GetPost, PostFilters, PostParams } from "../../repositories/post-repository";
+import postRepository, { GetPost, TopicIdFilter, PostParams } from "../../repositories/post-repository";
 
 export async function createPost(postData: PostParams): Promise<void> {
   await postRepository.insert(postData);
@@ -15,9 +15,8 @@ export async function getPosts(): Promise<GetPost[]> {
   return posts;
 }
 
-export async function getManyFilteredPosts(postFilters: PostFilters): Promise<GetPost[]> {
-  const posts = await postRepository.findManyByFilteredIds(postFilters);
-
+export async function getManyFilteredPosts(topicIdFilter: TopicIdFilter, inputFilterValue: string): Promise<GetPost[]> {
+  const posts = await postRepository.findManyByFilters(topicIdFilter, inputFilterValue);
   if (posts.length === 0) throw notFoundError();
 
   return posts;
@@ -39,7 +38,7 @@ const postService = {
   createPost,
   getPosts,
   updateLikes,
-  getManyFilteredPosts
+  getManyFilteredPosts,
 };
 
 export default postService;
