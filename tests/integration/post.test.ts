@@ -1,5 +1,5 @@
 
-import app, {init} from "../../src/app";
+import app, { init } from "../../src/app";
 import { faker } from "@faker-js/faker";
 import httpStatus from "http-status";
 import supertest from "supertest";
@@ -17,6 +17,7 @@ const server = supertest(app);
 
 describe("GET /posts", () => {
   const generateValidInput = () => ({
+    title: faker.lorem.sentences(10),
     text: faker.lorem.sentences(10),
     image: faker.internet.url(),
   });
@@ -24,7 +25,7 @@ describe("GET /posts", () => {
   async function newPost() {
     const input = generateValidInput();
 
-    return await createNewPost(input.text, input.image);
+    return await createNewPost(input.text, input.image, input.title);
   }
 
   it("should return 404 when have no posts", async () => {
@@ -50,6 +51,8 @@ describe("GET /posts", () => {
 
 describe("POST /posts", () => {
   const generateValidInput = () => ({
+    title: faker.lorem.sentences(10),
+    topicId: 1,
     text: faker.lorem.sentences(10),
     image: faker.internet.url(),
   });
@@ -93,7 +96,7 @@ describe("POST /posts", () => {
         const token = await generateValidAdminToken(admin);
         const input = generateValidInput();
 
-        const response = await server.post("/posts").set("Authorization", `Bearer ${token}`).send({...input, text: faker.datatype.number()});
+        const response = await server.post("/posts").set("Authorization", `Bearer ${token}`).send({ ...input, text: faker.datatype.number() });
 
         expect(response.status).toBe(httpStatus.BAD_REQUEST);
       });
@@ -121,6 +124,7 @@ describe("POST /posts", () => {
 
 describe("PATCH /posts/:id", () => {
   const generatePostInput = () => ({
+    title: faker.lorem.sentences(10),
     text: faker.lorem.sentences(10),
     image: faker.internet.url(),
   });
@@ -132,7 +136,7 @@ describe("PATCH /posts/:id", () => {
   async function newPost() {
     const input = generatePostInput();
 
-    return await createNewPost(input.text, input.image);
+    return await createNewPost(input.text, input.image, input.title);
   }
 
   it("should respond with status 401 if no token is given", async () => {
@@ -198,7 +202,7 @@ describe("PATCH /posts/:id", () => {
 
           const post = await newPost();
 
-          const response = await server.patch(`/posts/${post.id}`).set("Authorization", `Bearer ${token}`).send({...input, like: faker.lorem.word()});
+          const response = await server.patch(`/posts/${post.id}`).set("Authorization", `Bearer ${token}`).send({ ...input, like: faker.lorem.word() });
 
           expect(response.status).toBe(httpStatus.BAD_REQUEST);
         });

@@ -1,4 +1,14 @@
-import { genders, offices, posts, Prisma, PrismaClient, pronouns, sexualities, skincolor, topics } from "@prisma/client";
+import {
+  genders,
+  offices,
+  posts,
+  Prisma,
+  PrismaClient,
+  pronouns,
+  sexualities,
+  skincolor,
+  topics,
+} from "@prisma/client";
 import { textOne, textTwo } from "./blogTexts";
 const prisma = new PrismaClient();
 
@@ -12,7 +22,7 @@ async function main() {
   let posts: posts[] | Prisma.BatchPayload = await prisma.posts.findMany();
   let admin = await prisma.admins.findFirst();
 
-  if (topics.length < 6) {
+  if (topics.length < 7) {
     await prisma.topics.deleteMany();
 
     topics = await prisma.topics.createMany({
@@ -22,6 +32,7 @@ async function main() {
         { name: "Entrevistas" },
         { name: "Íris Indica" },
         { name: "Íris Comenta" },
+        { name: "Espaço das Artes" },
         { name: "Outros" },
       ],
     });
@@ -117,34 +128,35 @@ async function main() {
     await prisma.admin_sessions.create({
       data: {
         adminId: admin.id,
-        token: "1@FP24B6TP8EgoXu1se^uH"
-      }
+        token: "1@FP24B6TP8EgoXu1se^uH",
+      },
     });
   }
 
   if (posts.length < 5) {
     await prisma.posts.deleteMany();
+    const findTopics = await prisma.topics.findMany({});
 
     posts = await prisma.posts.createMany({
       data: [
         {
           adminId: admin.id,
-          title: 'Título 1',
-          topicId: 1,
+          title: "Título 1",
+          topicId: findTopics[0].id,
           text: textOne,
           image: "https://i.imgur.com/YFby08q.png",
         },
         {
           adminId: admin.id,
-          title: 'Título 2',
-          topicId: 2,
+          title: "Título 2",
+          topicId: findTopics[1].id,
           text: textTwo,
           image: "https://i.imgur.com/u4Kc3Lu.png",
         },
       ],
     });
   }
-  
+
   console.log({ sexualities, genders, pronouns, posts, admin });
 }
 
@@ -155,4 +167,3 @@ main()
   .finally(async () => {
     await prisma.$disconnect();
   });
-  

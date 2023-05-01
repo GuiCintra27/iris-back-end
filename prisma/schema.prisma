@@ -14,7 +14,7 @@ model admin_sessions {
   token      String   @unique
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
-  admins     admins   @relation(fields: [adminId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "admin-sessions_fk0")
+  admins     admins   @relation(fields: [adminId], references: [id], onDelete: Cascade, onUpdate: Cascade, map: "admin-sessions_fk0")
 
   @@map("admin-sessions")
 }
@@ -42,7 +42,7 @@ model contact {
   userId     Int
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
-  users      users    @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "contact_fk0")
+  users      users    @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade, map: "contact_fk0")
 }
 
 model donates {
@@ -52,7 +52,7 @@ model donates {
   visualized Boolean  @default(false)
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
-  users      users    @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "donates_fk0")
+  users      users    @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade, map: "donates_fk0")
 }
 
 model genders {
@@ -88,8 +88,8 @@ model posts {
   likes      Int      @default(0)
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
-  admins     admins   @relation(fields: [adminId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "posts_fk0")
-  topics     topics   @relation(fields: [topicId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "topics_fk0")
+  admins     admins   @relation(fields: [adminId], references: [id], onDelete: Cascade, onUpdate: Cascade, map: "posts_fk0")
+  topics     topics   @relation(fields: [topicId], references: [id], onDelete: Cascade, onUpdate: Cascade, map: "topics_fk0")
 }
 
 model pronouns {
@@ -106,7 +106,7 @@ model sessions {
   token      String   @unique
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
-  users      users    @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "sessions_fk0")
+  users      users    @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade, map: "sessions_fk0")
 }
 
 model sexualities {
@@ -137,8 +137,8 @@ model users {
   password    String
   created_at  DateTime     @default(now())
   updated_at  DateTime     @updatedAt
-  sexualities sexualities  @relation(fields: [sexualityId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "users_fk0")
-  genders     genders      @relation(fields: [genderId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "users_fk1")
+  sexualities sexualities  @relation(fields: [sexualityId], references: [id], onDelete: Cascade, onUpdate: Cascade, map: "users_fk0")
+  genders     genders      @relation(fields: [genderId], references: [id], onDelete: Cascade, onUpdate: Cascade, map: "users_fk1")
   pronouns    pronouns     @relation(fields: [pronounsId], references: [id])
   contact     contact[]
   donates     donates[]
@@ -161,9 +161,9 @@ model volunteers {
   visualized      Boolean   @default(false)
   created_at      DateTime  @default(now())
   updated_at      DateTime  @updatedAt
-  users           users     @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "volunteers_fk0")
-  skincolor       skincolor @relation(fields: [skinColorId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "volunteers_fk1")
-  offices         offices   @relation(fields: [officeId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "volunteers_fk2")
+  users           users     @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade, map: "volunteers_fk0")
+  skincolor       skincolor @relation(fields: [skinColorId], references: [id], onDelete: Cascade, onUpdate: Cascade, map: "volunteers_fk1")
+  offices         offices   @relation(fields: [officeId], references: [id], onDelete: Cascade, onUpdate: Cascade, map: "volunteers_fk2")
 
   @@index([id])
 }

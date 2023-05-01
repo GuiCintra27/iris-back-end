@@ -9,6 +9,7 @@ export async function cleanDb() {
   await prisma.volunteers.deleteMany({});
   await prisma.donates.deleteMany({});
   await prisma.posts.deleteMany({});
+  await prisma.topics.deleteMany({});
   await prisma.contact.deleteMany({});
   await prisma.newsletter.deleteMany({});
   await prisma.sessions.deleteMany({});
