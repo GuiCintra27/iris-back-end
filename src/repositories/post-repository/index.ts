@@ -18,6 +18,7 @@ async function findMany(): Promise<GetPost[]> {
       text: true,
       image: true,
       likes: true,
+      created_at: true,
       admins: {
         select: {
           name: true,
@@ -49,6 +50,7 @@ async function findManyByFilteredIds(postFilters: PostFilters): Promise<GetPost[
         text: true,
         image: true,
         likes: true,
+        created_at: true,
         admins: {
           select: {
             name: true,
@@ -86,7 +88,7 @@ export type PostFilters = {
 
 export type GetPost = Omit<PostParams, "adminId" | "topicId"> & { admins: { name: string; photo: string } };
 
-export type PostParams = Omit<posts, "id" | "created_at" | "updated_at">;
+export type PostParams = Omit<posts, "id" | "updated_at">;
 
 const postRepository = {
   insert,
