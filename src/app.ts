@@ -4,9 +4,12 @@ import express, { Express } from "express";
 import cors from "cors";
 import dotenv from "dotenv";
 import dotenvExpand from "dotenv-expand";
+import { OAuth2Client } from "google-auth-library";
 
 const env = dotenv.config();
 dotenvExpand.expand(env);
+
+export const googleClient = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
 import { connectDb, disconnectDB } from "./config";
 
@@ -18,8 +21,8 @@ import {
   postRouter,
   donateRouter,
   topicsRouter,
+  volunteerRouter,
 } from "./routers";
-import { volunteerRouter } from "./routers/volunteer-router";
 
 const app = express();
 app

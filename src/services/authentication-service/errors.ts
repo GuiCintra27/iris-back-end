@@ -6,3 +6,10 @@ export function invalidCredentialsError(): ApplicationError {
     message: "email or password are incorrect",
   };
 }
+
+export function invalidGoogleCredentialError(): ApplicationError {
+  return {
+    name: "InvalidGoogleCredentialError",
+    message: "google credential verification failed",
+  };
+}
