@@ -3,8 +3,10 @@ import "express-async-errors";
 import express, { Express } from "express";
 import cors from "cors";
 import dotenv from "dotenv";
+import dotenvExpand from "dotenv-expand";
 
-dotenv.config();
+const env = dotenv.config();
+dotenvExpand.expand(env);
 
 import { connectDb, disconnectDB } from "./config";
 
