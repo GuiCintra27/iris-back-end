@@ -1,5 +1,5 @@
 import { prisma } from "../../config";
-import { posts } from "@prisma/client";
+import { likes, posts } from "@prisma/client";
 
 async function insert(data: PostParams): Promise<void> {
   await prisma.posts.create({
@@ -17,7 +17,7 @@ async function findMany(): Promise<GetPost[]> {
       topics: true,
       text: true,
       image: true,
-      likes: true,
+      postCover: true,
       created_at: true,
       admins: {
         select: {
@@ -49,7 +49,7 @@ async function findManyByFilteredIds(postFilters: PostFilters): Promise<GetPost[
         topics: true,
         text: true,
         image: true,
-        likes: true,
+        postCover: true,
         created_at: true,
         admins: {
           select: {
@@ -69,15 +69,28 @@ async function findById(id: number): Promise<posts> {
   });
 }
 
-async function updateLikes(id: number, value: number) {
-  return await prisma.posts.update({
-    where: {
-      id,
-    },
+async function addLikes(postId: number, userId: number): Promise<likes> {
+  return await prisma.likes.create({
     data: {
-      likes: {
-        increment: value,
-      },
+      postId,
+      userId
+    },
+  });
+}
+
+async function deleteLikes(id: number): Promise<likes> {
+  return await prisma.likes.delete({
+    where: {
+      id
+    },
+  });
+}
+
+async function findLike(postId: number, userId: number): Promise<likes> {
+  return await prisma.likes.findFirst({
+    where: {
+      postId,
+      userId
     },
   });
 }
@@ -94,7 +107,9 @@ const postRepository = {
   insert,
   findMany,
   findById,
-  updateLikes,
+  addLikes,
+  deleteLikes,
+  findLike,
   findManyByFilteredIds
 };
 

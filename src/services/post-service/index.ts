@@ -1,4 +1,6 @@
-import { notFoundError, unprocessableContent } from "../../errors";
+import sessionRepository from "@/repositories/session-repository";
+import userRepository from "@/repositories/user-repository";
+import { notFoundError } from "../../errors";
 import postRepository, { GetPost, PostFilters, PostParams } from "../../repositories/post-repository";
 
 export async function createPost(postData: PostParams): Promise<void> {
@@ -23,14 +25,26 @@ export async function getManyFilteredPosts(postFilters: PostFilters): Promise<Ge
   return posts;
 }
 
-export async function updateLikes(postId: number, value: number): Promise<void> {
+export async function updateLikes(postId: number, userId: number): Promise<void> {
   const post = await postRepository.findById(postId);
-
   if (!post) throw notFoundError();
 
-  if (post.likes < 1 && value < 1) throw unprocessableContent();
+  const user = await userRepository.findById(userId);
+  if (!user) throw notFoundError();
 
-  await postRepository.updateLikes(postId, value);
+  await postRepository.addLikes(postId, userId);
+
+  return;
+}
+
+export async function excludeLikes(postId: number, userId: number): Promise<void> {
+  const user = await userRepository.findById(userId);
+  if (!user) throw notFoundError();
+
+  const like = await postRepository.findLike(postId, userId);
+  if (!like) throw notFoundError();
+
+  await postRepository.deleteLikes(like.id);
 
   return;
 }
@@ -39,7 +53,8 @@ const postService = {
   createPost,
   getPosts,
   updateLikes,
-  getManyFilteredPosts
+  getManyFilteredPosts,
+  excludeLikes
 };
 
 export default postService;
