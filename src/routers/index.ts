@@ -5,3 +5,4 @@ export * from "./contact-router";
 export * from "./post-router";
 export * from "./donate-router";
 export * from "./topics-router";
+export * from "./volunteer-router";
