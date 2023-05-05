@@ -137,23 +137,22 @@ async function main() {
     await prisma.posts.deleteMany();
     const findTopics = await prisma.topics.findMany({});
 
+    const postsTexts = [textOne, textTwo];
+    const postsQuantity = 15;
+    const images = ["https://i.imgur.com/YFby08q.png", "https://i.imgur.com/u4Kc3Lu.png"];
+
+    const postsData: posts[] = Array.apply(null, new Array(postsQuantity)).map((el: null, ind: number) => {
+      return {
+        adminId: admin?.id,
+        title: `Título ${ind + 1}`,
+        topicId: findTopics[Math.floor(Math.random() * findTopics.length)].id,
+        text: postsTexts[Math.floor(Math.random() * postsTexts.length)],
+        image: images[Math.floor(Math.random() * images.length)],
+      };
+    });
+
     posts = await prisma.posts.createMany({
-      data: [
-        {
-          adminId: admin.id,
-          title: "Título 1",
-          topicId: findTopics[0].id,
-          text: textOne,
-          image: "https://i.imgur.com/YFby08q.png",
-        },
-        {
-          adminId: admin.id,
-          title: "Título 2",
-          topicId: findTopics[1].id,
-          text: textTwo,
-          image: "https://i.imgur.com/u4Kc3Lu.png",
-        },
-      ],
+      data: postsData,
     });
   }
 
