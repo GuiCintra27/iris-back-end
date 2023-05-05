@@ -21,9 +21,7 @@ export const textOne = `A forma de transmissão mais comum do vírus HIV, causad
 
             A luta contra a AIDS é de todos, e é diaria, sexo seguro é um direito e deve ser a regra e não a excessão, independente da identidade de gênero, orientação sexual ou sexo biólogico.`;
 
-export const textTwo = `"Você é muito jovem para saber"
-
-	                                        Jovens sempre enfrentam situações em que suas vozes são silenciadas por justificativas sem sentido, sobre como ser jovem os torna incapazes de pensar por si mesmos. Os LGBTQIA+, além disso, muitas vezes são colocados como pessoas confusas, que estão apenas querendo chamar atenção. Sabemos o quão prejudicial isso é para a saúde mental dos jovens da nossa comunidade e podem ter certeza de que já acumulamos traumas demais no processo de aceitação.
+export const textTwo = `Jovens sempre enfrentam situações em que suas vozes são silenciadas por justificativas sem sentido, sobre como ser jovem os torna incapazes de pensar por si mesmos. Os LGBTQIA+, além disso, muitas vezes são colocados como pessoas confusas, que estão apenas querendo chamar atenção. Sabemos o quão prejudicial isso é para a saúde mental dos jovens da nossa comunidade e podem ter certeza de que já acumulamos traumas demais no processo de aceitação.
 					
 						"Na minha época isso não existia!"
 					
