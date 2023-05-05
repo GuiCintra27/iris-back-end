@@ -3,7 +3,7 @@ import postService from "../services/post-service";
 import httpStatus from "http-status";
 import { AuthenticatedRequest } from "../middlewares";
 import { AdminAuthenticatedRequest } from "../middlewares/admin-authentication-middleware";
-import { PostFilters } from "@/repositories/post-repository";
+import { TopicIdFilter } from "@/repositories/post-repository";
 
 export async function createPost(req: AdminAuthenticatedRequest, res: Response) {
   const { adminId } = req;
@@ -30,16 +30,15 @@ export async function getPosts(req: Request, res: Response) {
 }
 
 export async function getFilteredPosts(req: Request, res: Response) {
-  const { filterIds } = req.body;
-  const filter = filterIds as PostFilters;
+  const { topicFilterIds, inputFilterValue } = req.body;
+  const topicFilter = topicFilterIds as TopicIdFilter;
 
   try {
-    const filteredPosts = await postService.getManyFilteredPosts(filter);
+    const filteredPosts = await postService.getManyFilteredPosts(topicFilter, inputFilterValue);
 
     return res.status(httpStatus.OK).send(filteredPosts);
   } catch (error) {
     if (error.name === "NotFoundError") return res.status(httpStatus.NOT_FOUND).send(error);
-
     return res.sendStatus(httpStatus.INTERNAL_SERVER_ERROR);
   }
 }
@@ -55,7 +54,7 @@ export async function updateLikes(req: AuthenticatedRequest, res: Response) {
   } catch (error) {
     if (error.name === "NotFoundError") return res.status(httpStatus.NOT_FOUND).send(error);
 
-    if(error.name === "UnprocessableContent") return res.status(httpStatus.UNPROCESSABLE_ENTITY).send(error);
+    if (error.name === "UnprocessableContent") return res.status(httpStatus.UNPROCESSABLE_ENTITY).send(error);
 
     return res.sendStatus(httpStatus.INTERNAL_SERVER_ERROR);
   }
