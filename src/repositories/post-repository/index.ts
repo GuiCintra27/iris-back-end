@@ -29,7 +29,11 @@ async function findMany(): Promise<GetPost[]> {
   });
 }
 
-async function findManyByFilters(topicIdsFilters: TopicIdFilter, inputValueFilter: string): Promise<GetPost[]> {
+async function findManyByFilters(
+  topicIdsFilters: TopicIdFilter,
+  inputValueFilter: string,
+  pageNumber: number,
+): Promise<GetPost[]> {
   const andClause: Prisma.Enumerable<Prisma.postsWhereInput> = [];
 
   const filter: { where: Prisma.postsWhereInput } = {
@@ -71,6 +75,7 @@ async function findManyByFilters(topicIdsFilters: TopicIdFilter, inputValueFilte
         },
       },
     },
+    skip: (pageNumber - 1) * 6,
     take: 6,
   });
 }

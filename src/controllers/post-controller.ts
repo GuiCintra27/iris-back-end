@@ -31,10 +31,12 @@ export async function getPosts(req: Request, res: Response) {
 
 export async function getFilteredPosts(req: Request, res: Response) {
   const { topicFilterIds, inputFilterValue } = req.body;
+  const { page } = req.headers as { page: string };
+  const pageNumber = Number(page) || 1;
   const topicFilter = topicFilterIds as TopicIdFilter;
 
   try {
-    const filteredPosts = await postService.getManyFilteredPosts(topicFilter, inputFilterValue);
+    const filteredPosts = await postService.getManyFilteredPosts(topicFilter, inputFilterValue, pageNumber);
 
     return res.status(httpStatus.OK).send(filteredPosts);
   } catch (error) {
