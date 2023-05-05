@@ -5,3 +5,9 @@ export const signInSchema = Joi.object<SignInParams>({
   email: Joi.string().email({ minDomainSegments: 2, tlds: { allow: ["com", "net", "edu", "br"] } }).required(),
   password: Joi.string().min(6).required(),
 });
+
+export const signInGoogleSchema = Joi.object<SignInGoogleParams>({
+  credential: Joi.string().required()
+});
+
+export type SignInGoogleParams = { credential: string };

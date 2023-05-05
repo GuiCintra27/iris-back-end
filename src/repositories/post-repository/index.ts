@@ -18,6 +18,7 @@ async function findMany(): Promise<GetPost[]> {
       text: true,
       image: true,
       likes: true,
+      created_at: true,
       admins: {
         select: {
           name: true,
@@ -51,21 +52,24 @@ async function findManyByFilters(topicIdsFilters: TopicIdFilter, inputValueFilte
   }
 
   return prisma.posts.findMany({
-    ...filter,
-    orderBy: {
-      id: "desc",
-    },
-    select: {
-      id: true,
-      title: true,
-      topics: true,
-      text: true,
-      image: true,
-      likes: true,
-      admins: {
-        select: {
-          name: true,
-          photo: true,
+      ...filter,
+      orderBy:{
+          id: 'desc'
+      },
+      select: {
+        id: true,
+        title: true,
+        topics: true,
+        text: true,
+        image: true,
+        likes: true,
+        created_at: true,
+        admins: {
+          select: {
+            name: true,
+            photo: true,
+          },
+
         },
       },
     },
@@ -100,7 +104,7 @@ export type TopicIdFilter = {
 
 export type GetPost = Omit<PostParams, "adminId" | "topicId"> & { admins: { name: string; photo: string } };
 
-export type PostParams = Omit<posts, "id" | "created_at" | "updated_at">;
+export type PostParams = Omit<posts, "id" | "updated_at">;
 
 const postRepository = {
   insert,

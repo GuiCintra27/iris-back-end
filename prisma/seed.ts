@@ -141,14 +141,14 @@ async function main() {
       data: [
         {
           adminId: admin.id,
-          title: "Título 1",
+          title: "Sorofobia",
           topicId: findTopics[0].id,
           text: textOne,
           image: "https://i.imgur.com/YFby08q.png",
         },
         {
           adminId: admin.id,
-          title: "Título 2",
+          title: `"Você é muito jovem para saber"`,
           topicId: findTopics[1].id,
           text: textTwo,
           image: "https://i.imgur.com/u4Kc3Lu.png",
