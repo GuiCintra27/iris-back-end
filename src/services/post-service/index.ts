@@ -1,5 +1,5 @@
-import sessionRepository from "@/repositories/session-repository";
 import userRepository from "@/repositories/user-repository";
+import { likes, posts } from "@prisma/client";
 import { notFoundError } from "../../errors";
 import postRepository, { GetPost, PostFilters, PostParams } from "../../repositories/post-repository";
 
@@ -9,12 +9,18 @@ export async function createPost(postData: PostParams): Promise<void> {
   return;
 }
 
-export async function getPosts(): Promise<GetPost[]> {
-  const posts = await postRepository.findMany();
+export async function getPosts(postId: number): Promise<posts> {
+  const post = await postRepository.findById(postId);
+  if (!post) throw notFoundError();
 
-  if (posts.length === 0) throw notFoundError();
+  return post;
+}
 
-  return posts;
+export async function getLikes(postId: number): Promise<likes[]> {
+  const likes = await postRepository.findManyLikes(postId);
+  if (!likes) throw notFoundError();
+
+  return likes;
 }
 
 export async function getManyFilteredPosts(postFilters: PostFilters): Promise<GetPost[]> {
@@ -54,7 +60,8 @@ const postService = {
   getPosts,
   updateLikes,
   getManyFilteredPosts,
-  excludeLikes
+  excludeLikes,
+  getLikes
 };
 
 export default postService;

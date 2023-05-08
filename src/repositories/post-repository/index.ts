@@ -9,26 +9,6 @@ async function insert(data: PostParams): Promise<void> {
   return;
 }
 
-async function findMany(): Promise<GetPost[]> {
-  return await prisma.posts.findMany({
-    select: {
-      id: true,
-      title: true,
-      topics: true,
-      text: true,
-      image: true,
-      postCover: true,
-      created_at: true,
-      admins: {
-        select: {
-          name: true,
-          photo: true,
-        },
-      },
-    },
-  });
-}
-
 async function findManyByFilteredIds(postFilters: PostFilters): Promise<GetPost[]> {
   let filter = {
     where: {}
@@ -66,6 +46,18 @@ async function findById(id: number): Promise<posts> {
     where: {
       id,
     },
+    include: {
+      admins: true,
+      topics: true
+    }
+  });
+}
+
+async function findManyLikes(postId: number): Promise<likes[]> {
+  return await prisma.likes.findMany({
+    where: {
+      postId
+    }
   });
 }
 
@@ -105,12 +97,12 @@ export type PostParams = Omit<posts, "id" | "updated_at">;
 
 const postRepository = {
   insert,
-  findMany,
   findById,
   addLikes,
   deleteLikes,
   findLike,
-  findManyByFilteredIds
+  findManyByFilteredIds,
+  findManyLikes
 };
 
 export default postRepository;

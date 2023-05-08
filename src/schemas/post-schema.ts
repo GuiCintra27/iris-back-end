@@ -6,6 +6,7 @@ export const createPostSchema = Joi.object<Omit<PostParams, "adminId" | "likes">
   topicId: Joi.number().required(),
   text: Joi.string().required(),
   image: Joi.string().uri().required(),
+  postCover: Joi.string().uri().required()
 });
 
 export const updateLikeSchema = Joi.object<{ postId: number }>({
