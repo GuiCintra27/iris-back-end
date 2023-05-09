@@ -145,6 +145,7 @@ async function main() {
           topicId: findTopics[0].id,
           text: textOne,
           image: "https://i.imgur.com/YFby08q.png",
+          postCover: "https://i.imgur.com/J4c86FC.png"
         },
         {
           adminId: admin.id,
@@ -152,6 +153,7 @@ async function main() {
           topicId: findTopics[1].id,
           text: textTwo,
           image: "https://i.imgur.com/u4Kc3Lu.png",
+          postCover: "https://i.imgur.com/J4c86FC.png"
         },
       ],
     });
