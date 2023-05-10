@@ -12,6 +12,13 @@ async function insert(data: PostParams): Promise<void> {
 async function findManyByFilters(topicIdsFilters: TopicIdFilter, inputValueFilter: string): Promise<GetPost[]> {
   const andClause: Prisma.Enumerable<Prisma.postsWhereInput> = [];
 
+async function findManyByFilters(
+  topicIdsFilters: TopicIdFilter,
+  inputValueFilter: string,
+  pageNumber: number,
+): Promise<GetPost[]> {
+  const andClause: Prisma.Enumerable<Prisma.postsWhereInput> = [];
+    
   const filter: { where: Prisma.postsWhereInput } = {
     where: {
       AND: andClause,
@@ -32,27 +39,26 @@ async function findManyByFilters(topicIdsFilters: TopicIdFilter, inputValueFilte
   }
 
   return prisma.posts.findMany({
-      ...filter,
-      orderBy:{
-          id: 'desc'
-      },
-      select: {
-        id: true,
-        title: true,
-        topics: true,
-        text: true,
-        image: true,
-        postCover: true,
-        created_at: true,
-        admins: {
-          select: {
-            name: true,
-            photo: true,
-          },
-
+    ...filter,
+    orderBy: {
+      id: "desc",
+    },
+    select: {
+      id: true,
+      title: true,
+      topics: true,
+      text: true,
+      image: true,
+      likes: true,
+      created_at: true,
+      admins: {
+        select: {
+          name: true,
+          photo: true,
         },
       },
     },
+    skip: (pageNumber - 1) * 6,
     take: 6,
   });
 }
@@ -85,6 +91,10 @@ async function addLikes(postId: number, userId: number): Promise<likes> {
     },
   });
 }
+
+export type TopicIdFilter = {
+  topicId: number[];
+};
 
 async function deleteLikes(id: number): Promise<likes> {
   return await prisma.likes.delete({

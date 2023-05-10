@@ -23,8 +23,8 @@ export async function getLikes(postId: number): Promise<likes[]> {
   return likes;
 }
 
-export async function getManyFilteredPosts(topicIdFilter: TopicIdFilter, inputFilterValue: string): Promise<GetPost[]> {
-  const posts = await postRepository.findManyByFilters(topicIdFilter, inputFilterValue);
+export async function getManyFilteredPosts(topicIdFilter: TopicIdFilter, inputFilterValue: string, pageNumber: number): Promise<GetPost[]> {
+  const posts = await postRepository.findManyByFilters(topicIdFilter, inputFilterValue, pageNumber);
   if (posts.length === 0) throw notFoundError();
 
   return posts;
