@@ -4,10 +4,9 @@ import httpStatus from "http-status";
 import supertest from "supertest";
 import { cleanDb, generateValidAdminToken, generateValidToken } from "../helpers";
 import * as jwt from "jsonwebtoken";
-import { createNewLike, createNewPost, createUser, getPosts, getTopics } from "../factories";
+import { createNewLike, createUser, generateValidInputPost, getPosts, getTopics, newPost } from "../factories";
 import { createAdmin } from "../factories/admin-factory";
 import { createNewTopic } from "../factories/topics-factory";
-import { topics } from "@prisma/client";
 
 beforeAll(async () => {
   await init();
@@ -24,18 +23,6 @@ afterEach(async () => {
 const server = supertest(app);
 
 describe("GET /posts", () => {
-  const generateValidInput = () => ({
-    title: faker.lorem.sentences(10),
-    text: faker.lorem.sentences(10),
-    image: faker.internet.url(),
-  });
-
-  async function newPost() {
-    const input = generateValidInput();
-
-    return await createNewPost(input.text, input.image, input.title);
-  }
-
   it("should return 404 when have no posts", async () => {
     const response = await server.post("/posts/filter").send(
       {
@@ -69,14 +56,6 @@ describe("GET /posts", () => {
 });
 
 describe("POST /posts", () => {
-  const generateValidInput = (topic: topics) => ({
-    title: faker.lorem.sentences(10),
-    topicId: topic.id,
-    text: faker.lorem.sentences(10),
-    image: faker.internet.url(),
-    postCover: faker.image.imageUrl()
-  });
-
   it("should respond with status 401 if no token is given", async () => {
     const response = await server.post("/posts");
 
@@ -115,7 +94,7 @@ describe("POST /posts", () => {
         const admin = await createAdmin();
         const token = await generateValidAdminToken(admin);
         const topic = await getTopics();
-        const input = generateValidInput(topic);
+        const input = generateValidInputPost(topic);
 
         const response = await server.post("/posts").set("Authorization", `Bearer ${token}`).send({ ...input, text: faker.datatype.number() });
 
@@ -125,7 +104,7 @@ describe("POST /posts", () => {
       describe("When input is valid", () => {
         it("Should return 201 and", async () => {
           const topic = await getTopics();
-          const input = generateValidInput(topic);
+          const input = generateValidInputPost(topic);
           const admin = await createAdmin();
           const token = await generateValidAdminToken(admin);
 
@@ -142,21 +121,6 @@ describe("POST /posts", () => {
 });
 
 describe("POST /posts/likes", () => {
-  const generateValidInput = (topic: topics) => ({
-    title: faker.lorem.sentences(10),
-    topicId: topic.id,
-    text: faker.lorem.sentences(10),
-    image: faker.internet.url(),
-    postCover: faker.image.imageUrl()
-  });
-
-  async function newPost() {
-    const topic = await getTopics();
-    const input = generateValidInput(topic);
-
-    return await createNewPost(input.text, input.image, input.title);
-  }
-
   it("should return 401 when you isn't signed", async () => {
     const token = faker.lorem.word();
     const post = await newPost();
@@ -180,28 +144,13 @@ describe("POST /posts/likes", () => {
     const token = await generateValidToken(user);
     const post = await newPost();
 
-    const response = await server.post("/posts/likes").set("Authorization", `Bearer ${token}`).send({ postId: post.id});
+    const response = await server.post("/posts/likes").set("Authorization", `Bearer ${token}`).send({ postId: post.id });
 
     expect(response.status).toBe(httpStatus.CREATED);
   });
 });
 
 describe("DELETE /posts/likes/:postId", () => {
-  const generateValidInput = (topic: topics) => ({
-    title: faker.lorem.sentences(10),
-    topicId: topic.id,
-    text: faker.lorem.sentences(10),
-    image: faker.internet.url(),
-    postCover: faker.image.imageUrl()
-  });
-
-  async function newPost() {
-    const topic = await getTopics();
-    const input = generateValidInput(topic);
-
-    return await createNewPost(input.text, input.image, input.title);
-  }
-
   it("should return 401 when you isn't signed", async () => {
     const token = faker.lorem.word();
     const post = await newPost();

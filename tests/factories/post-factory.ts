@@ -4,6 +4,25 @@ import { prisma } from "../../src/config";
 import { createAdmin } from "./admin-factory";
 import { createNewTopic } from "./topics-factory";
 
+export function generateValidInputPost(topic?: topics) {
+  const newTopic = topic === undefined ? 1 : topic.id;
+
+  return {
+    title: faker.lorem.sentences(10),
+    topicId: newTopic,
+    text: faker.lorem.sentences(10),
+    image: faker.internet.url(),
+    postCover: faker.image.imageUrl(),
+  };
+}
+
+export async function newPost( ) {
+  const topic = await getTopics();
+  const input = generateValidInputPost(topic);
+
+  return await createNewPost(input.text, input.image, input.title);
+}
+
 async function getAdmin(): Promise<admins> {
   const admin = await prisma.admins.findMany();
 
@@ -46,7 +65,7 @@ export async function createNewLike(postId: number, userId: number): Promise<lik
       postId
     }
   });
-};
+}
 
 export async function getPosts(): Promise<posts[]> {
   return await prisma.posts.findMany({});
