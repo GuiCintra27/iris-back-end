@@ -3,7 +3,7 @@ import postService from "../services/post-service";
 import httpStatus from "http-status";
 import { AuthenticatedRequest } from "../middlewares";
 import { AdminAuthenticatedRequest } from "../middlewares/admin-authentication-middleware";
-import { PostFilters } from "@/repositories/post-repository";
+import { TopicIdFilter } from "@/repositories/post-repository";
 
 export async function createPost(req: AdminAuthenticatedRequest, res: Response) {
   const { adminId } = req;
@@ -46,16 +46,17 @@ export async function getLikesByPostId(req: Request, res: Response) {
 }
 
 export async function getFilteredPosts(req: Request, res: Response) {
-  const { filterIds } = req.body;
-  const filter = filterIds as PostFilters;
+  const { topicFilterIds, inputFilterValue } = req.body;
+  const { page } = req.headers as { page: string };
+  const pageNumber = Number(page) || 1;
+  const topicFilter = topicFilterIds as TopicIdFilter;
 
   try {
-    const filteredPosts = await postService.getManyFilteredPosts(filter);
+    const filteredPosts = await postService.getManyFilteredPosts(topicFilter, inputFilterValue, pageNumber);
 
     return res.status(httpStatus.OK).send(filteredPosts);
   } catch (error) {
     if (error.name === "NotFoundError") return res.status(httpStatus.NOT_FOUND).send(error);
-
     return res.sendStatus(httpStatus.INTERNAL_SERVER_ERROR);
   }
 }
@@ -70,7 +71,7 @@ export async function incrementLikes(req: AuthenticatedRequest, res: Response) {
     return res.sendStatus(httpStatus.CREATED);
   } catch (error) {
     if (error.name === "NotFoundError") return res.status(httpStatus.NOT_FOUND).send(error);
-
+    
     return res.sendStatus(httpStatus.INTERNAL_SERVER_ERROR);
   }
 }
