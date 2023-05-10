@@ -7,7 +7,7 @@ export const signInSchema = Joi.object<SignInParams>({
 });
 
 export const signInGoogleSchema = Joi.object<SignInGoogleParams>({
-  credential: Joi.string().required()
+  accessToken: Joi.string().required()
 });
 
-export type SignInGoogleParams = { credential: string };
+export type SignInGoogleParams = { accessToken: string };
