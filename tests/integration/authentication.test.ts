@@ -1,4 +1,3 @@
-
 import app, { init } from "../../src/app";
 import { faker } from "@faker-js/faker";
 import httpStatus from "http-status";
@@ -33,11 +32,10 @@ describe("POST /auth/sign-in", () => {
 
   describe("when body is valid", () => {
     it("should respond with status 401 if there is no user for given email", async () => {
-      console.log("oi");
       const body = createBodyUser();
-      console.log("oi 2");
+
       const response = await server.post("/auth/sign-in").send(body);
-      console.log("oi 3");
+
       expect(response.status).toBe(httpStatus.UNAUTHORIZED);
     });
 

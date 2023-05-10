@@ -5,6 +5,9 @@ import { cleanDb } from "../helpers";
 
 beforeAll(async () => {
   await init();
+});
+
+beforeEach(async () => {
   await cleanDb();
 });
 
