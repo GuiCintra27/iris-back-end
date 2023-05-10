@@ -15,11 +15,11 @@ beforeAll(async () => {
 
 beforeEach(async () => {
   await cleanDb();
-})
+});
 
 afterEach(async () => {
   await cleanDb();
-})
+});
 
 const server = supertest(app);
 
@@ -37,8 +37,6 @@ describe("GET /posts", () => {
   }
 
   it("should return 404 when have no posts", async () => {
-    
-
     const response = await server.post("/posts/filter").send(
       {
         filterIds: {
