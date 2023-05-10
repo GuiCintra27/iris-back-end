@@ -1,5 +1,5 @@
 import { prisma } from "../../config";
-import { likes, posts } from "@prisma/client";
+import { likes, posts, Prisma } from "@prisma/client";
 
 async function insert(data: PostParams): Promise<void> {
   await prisma.posts.create({
@@ -9,13 +9,26 @@ async function insert(data: PostParams): Promise<void> {
   return;
 }
 
-async function findManyByFilteredIds(postFilters: PostFilters): Promise<GetPost[]> {
-  let filter = {
-    where: {}
+async function findManyByFilters(topicIdsFilters: TopicIdFilter, inputValueFilter: string): Promise<GetPost[]> {
+  const andClause: Prisma.Enumerable<Prisma.postsWhereInput> = [];
+
+  const filter: { where: Prisma.postsWhereInput } = {
+    where: {
+      AND: andClause,
+    },
   };
 
-  if (postFilters.topicId.length !== 0) {
-      filter.where = {...filter.where, topicId: { in: postFilters.topicId }}
+  if (topicIdsFilters.topicId?.length !== 0) {
+    andClause.push({ topicId: { in: topicIdsFilters.topicId } });
+  }
+
+  if (inputValueFilter !== "") {
+    andClause.push({
+      OR: [
+        { title: { contains: inputValueFilter, mode: "insensitive" } },
+        { text: { contains: inputValueFilter, mode: "insensitive" } },
+      ],
+    });
   }
 
   return prisma.posts.findMany({
@@ -36,9 +49,12 @@ async function findManyByFilteredIds(postFilters: PostFilters): Promise<GetPost[
             name: true,
             photo: true,
           },
+
         },
       },
-    });
+    },
+    take: 6,
+  });
 }
 
 async function findById(id: number): Promise<posts> {
@@ -87,9 +103,9 @@ async function findLike(postId: number, userId: number): Promise<likes> {
   });
 }
 
-export type PostFilters = {
-  topicId: number[]
-}
+export type TopicIdFilter = {
+  topicId: number[];
+};
 
 export type GetPost = Omit<PostParams, "adminId" | "topicId"> & { admins: { name: string; photo: string } };
 
@@ -98,10 +114,10 @@ export type PostParams = Omit<posts, "id" | "updated_at">;
 const postRepository = {
   insert,
   findById,
+  findManyByFilters,
   addLikes,
   deleteLikes,
   findLike,
-  findManyByFilteredIds,
   findManyLikes
 };
 
