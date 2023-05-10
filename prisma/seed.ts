@@ -140,6 +140,7 @@ async function main() {
     const postsTexts = [textOne, textTwo];
     const postsQuantity = 15;
     const images = ["https://i.imgur.com/YFby08q.png", "https://i.imgur.com/u4Kc3Lu.png"];
+    const postCovers = ["https://i.imgur.com/YFby08q.png", "https://i.imgur.com/u4Kc3Lu.png"];
 
     const postsData: posts[] = Array.apply(null, new Array(postsQuantity)).map((el: null, ind: number) => {
       return {
@@ -148,6 +149,7 @@ async function main() {
         topicId: findTopics[Math.floor(Math.random() * findTopics.length)].id,
         text: postsTexts[Math.floor(Math.random() * postsTexts.length)],
         image: images[Math.floor(Math.random() * images.length)],
+        postCover: images[Math.floor(Math.random() * images.length)]
       };
     });
 
