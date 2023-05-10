@@ -1,12 +1,10 @@
 
-import app, {init} from "../../src/app"
+import app, { init } from "../../src/app";
 import { faker } from "@faker-js/faker";
 import httpStatus from "http-status";
 import supertest from "supertest";
-import { createContact, getContactByEmail } from "../factories";
-import { createUser } from "../factories";
+import { createUser, createContact, getContactByEmail, generateValidInsertInput, newContact } from "../factories";
 import { cleanDb, generateValidAdminToken, generateValidToken } from "../helpers";
-import { generateValidInsertInput } from "../../src/schemas/contact-schema.test";
 import * as jwt from "jsonwebtoken";
 import { createAdmin } from "../factories/admin-factory";
 
@@ -17,17 +15,6 @@ beforeAll(async () => {
 beforeEach(async () => {
   await cleanDb();
 });
-
-async function newContact() {
-  const user = await createUser();
-  const admin = await createAdmin();
-  const token = await generateValidAdminToken(admin);
-  const input = generateValidInsertInput();
-
-  const contact = await createContact({ ...input, userId: user.id });
-
-  return { token, input, contact };
-}
 
 const server = supertest(app);
 
@@ -80,7 +67,7 @@ describe("POST /contact", () => {
 
       it("should return 429 when message limit was reached", async () => {
         const input = generateValidInsertInput();
-        const user = await createUser({email: input.email});
+        const user = await createUser({ email: input.email });
         const token = await generateValidToken(user);
 
         await createContact({ ...input, userId: user.id });
@@ -96,7 +83,7 @@ describe("POST /contact", () => {
         const input = generateValidInsertInput();
 
         it("Should return 204", async () => {
-          const user = await createUser({email: input.email});
+          const user = await createUser({ email: input.email });
           const token = await generateValidToken(user);
 
           const response = await server.post("/contact").set("Authorization", `Bearer ${token}`).send(input);
