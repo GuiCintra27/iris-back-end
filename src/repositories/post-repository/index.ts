@@ -9,9 +9,6 @@ async function insert(data: PostParams): Promise<void> {
   return;
 }
 
-async function findManyByFilters(topicIdsFilters: TopicIdFilter, inputValueFilter: string): Promise<GetPost[]> {
-  const andClause: Prisma.Enumerable<Prisma.postsWhereInput> = [];
-
 async function findManyByFilters(
   topicIdsFilters: TopicIdFilter,
   inputValueFilter: string,
@@ -49,6 +46,7 @@ async function findManyByFilters(
       topics: true,
       text: true,
       image: true,
+      postCover: true,
       likes: true,
       created_at: true,
       admins: {
@@ -91,10 +89,6 @@ async function addLikes(postId: number, userId: number): Promise<likes> {
     },
   });
 }
-
-export type TopicIdFilter = {
-  topicId: number[];
-};
 
 async function deleteLikes(id: number): Promise<likes> {
   return await prisma.likes.delete({
