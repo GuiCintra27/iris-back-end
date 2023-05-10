@@ -16,7 +16,7 @@ export async function createSession(token: string): Promise<Session> {
 
 export async function createAdminSession(token: string): Promise<admin_sessions> {
   const admin = await createAdmin();
-
+  
   return prisma.admin_sessions.create({
     data: {
       token: token,

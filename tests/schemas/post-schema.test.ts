@@ -6,6 +6,7 @@ const generateValidInput = () => ({
   topicId: 1,
   text: faker.lorem.sentences(10),
   image: faker.internet.url(),
+  postCover: faker.image.imageUrl()
 });
 
 describe("createPostSchema", () => {

@@ -1,5 +1,7 @@
-import { notFoundError, unprocessableContent } from "../../errors";
 import postRepository, { GetPost, TopicIdFilter, PostParams } from "../../repositories/post-repository";
+import userRepository from "@/repositories/user-repository";
+import { likes, posts } from "@prisma/client";
+import { notFoundError } from "../../errors";
 
 export async function createPost(postData: PostParams): Promise<void> {
   await postRepository.insert(postData);
@@ -7,12 +9,18 @@ export async function createPost(postData: PostParams): Promise<void> {
   return;
 }
 
-export async function getPosts(): Promise<GetPost[]> {
-  const posts = await postRepository.findMany();
+export async function getPosts(postId: number): Promise<posts> {
+  const post = await postRepository.findById(postId);
+  if (!post) throw notFoundError();
 
-  if (posts.length === 0) throw notFoundError();
+  return post;
+}
 
-  return posts;
+export async function getLikes(postId: number): Promise<likes[]> {
+  const likes = await postRepository.findManyLikes(postId);
+  if (!likes) throw notFoundError();
+
+  return likes;
 }
 
 export async function getManyFilteredPosts(topicIdFilter: TopicIdFilter, inputFilterValue: string): Promise<GetPost[]> {
@@ -22,14 +30,26 @@ export async function getManyFilteredPosts(topicIdFilter: TopicIdFilter, inputFi
   return posts;
 }
 
-export async function updateLikes(postId: number, value: number): Promise<void> {
+export async function updateLikes(postId: number, userId: number): Promise<void> {
   const post = await postRepository.findById(postId);
-
   if (!post) throw notFoundError();
 
-  if (post.likes < 1 && value < 1) throw unprocessableContent();
+  const user = await userRepository.findById(userId);
+  if (!user) throw notFoundError();
 
-  await postRepository.updateLikes(postId, value);
+  await postRepository.addLikes(postId, userId);
+
+  return;
+}
+
+export async function excludeLikes(postId: number, userId: number): Promise<void> {
+  const user = await userRepository.findById(userId);
+  if (!user) throw notFoundError();
+
+  const like = await postRepository.findLike(postId, userId);
+  if (!like) throw notFoundError();
+
+  await postRepository.deleteLikes(like.id);
 
   return;
 }
@@ -39,6 +59,8 @@ const postService = {
   getPosts,
   updateLikes,
   getManyFilteredPosts,
+  excludeLikes,
+  getLikes
 };
 
 export default postService;
