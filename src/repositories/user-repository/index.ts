@@ -16,6 +16,14 @@ async function findByEmail(email: string, select?: Prisma.usersSelect): Promise<
   return prisma.users.findUnique(params);
 }
 
+async function findById(id: number): Promise<users> {
+  return prisma.users.findUnique({
+    where: {
+      id
+    }
+  });
+}
+
 async function findByPhoneNumber(phoneNumber: string): Promise<users> {
   const params: Prisma.usersFindUniqueArgs = {
     where: {
@@ -62,6 +70,7 @@ const userRepository = {
   findByPhoneNumber,
   create,
   registerData,
+  findById
 };
 
 export default userRepository;

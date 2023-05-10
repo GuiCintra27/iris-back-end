@@ -1,4 +1,4 @@
-import { createPost, getFilteredPosts, getPosts, updateLikes } from "../controllers";
+import { createPost, decreaseLikes, getFilteredPosts, getLikesByPostId, getPostsById, incrementLikes } from "../controllers";
 import { adminAuthenticateToken, authenticateToken, validateBody, validateParams } from "../middlewares";
 import { createPostSchema, postIdSchema, updateLikeSchema } from "../schemas";
 import { Router } from "express";
@@ -6,9 +6,11 @@ import { Router } from "express";
 const postRouter = Router();
 
 postRouter
-  .get("/", getPosts)
+  .get("/:postId", getPostsById)
+  .get("/likes/:postId", getLikesByPostId)
   .post("/filter", getFilteredPosts)
   .post("/", adminAuthenticateToken, validateBody(createPostSchema), createPost)
-  .patch("/:id", authenticateToken, validateParams(postIdSchema), validateBody(updateLikeSchema), updateLikes);
+  .post("/likes", authenticateToken, validateBody(updateLikeSchema), incrementLikes)
+  .delete("/likes/:postId", authenticateToken, validateParams(postIdSchema), decreaseLikes);
 
 export { postRouter };

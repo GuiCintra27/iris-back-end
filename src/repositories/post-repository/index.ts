@@ -1,5 +1,5 @@
 import { prisma } from "../../config";
-import { posts, Prisma } from "@prisma/client";
+import { likes, posts, Prisma } from "@prisma/client";
 
 async function insert(data: PostParams): Promise<void> {
   await prisma.posts.create({
@@ -9,25 +9,8 @@ async function insert(data: PostParams): Promise<void> {
   return;
 }
 
-async function findMany(): Promise<GetPost[]> {
-  return await prisma.posts.findMany({
-    select: {
-      id: true,
-      title: true,
-      topics: true,
-      text: true,
-      image: true,
-      likes: true,
-      created_at: true,
-      admins: {
-        select: {
-          name: true,
-          photo: true,
-        },
-      },
-    },
-  });
-}
+async function findManyByFilters(topicIdsFilters: TopicIdFilter, inputValueFilter: string): Promise<GetPost[]> {
+  const andClause: Prisma.Enumerable<Prisma.postsWhereInput> = [];
 
 async function findManyByFilters(
   topicIdsFilters: TopicIdFilter,
@@ -35,7 +18,7 @@ async function findManyByFilters(
   pageNumber: number,
 ): Promise<GetPost[]> {
   const andClause: Prisma.Enumerable<Prisma.postsWhereInput> = [];
-
+    
   const filter: { where: Prisma.postsWhereInput } = {
     where: {
       AND: andClause,
@@ -85,18 +68,47 @@ async function findById(id: number): Promise<posts> {
     where: {
       id,
     },
+    include: {
+      admins: true,
+      topics: true
+    }
   });
 }
 
-async function updateLikes(id: number, value: number) {
-  return await prisma.posts.update({
+async function findManyLikes(postId: number): Promise<likes[]> {
+  return await prisma.likes.findMany({
     where: {
-      id,
-    },
+      postId
+    }
+  });
+}
+
+async function addLikes(postId: number, userId: number): Promise<likes> {
+  return await prisma.likes.create({
     data: {
-      likes: {
-        increment: value,
-      },
+      postId,
+      userId
+    },
+  });
+}
+
+export type TopicIdFilter = {
+  topicId: number[];
+};
+
+async function deleteLikes(id: number): Promise<likes> {
+  return await prisma.likes.delete({
+    where: {
+      id
+    },
+  });
+}
+
+async function findLike(postId: number, userId: number): Promise<likes> {
+  return await prisma.likes.findFirst({
+    where: {
+      postId,
+      userId
     },
   });
 }
@@ -111,10 +123,12 @@ export type PostParams = Omit<posts, "id" | "updated_at">;
 
 const postRepository = {
   insert,
-  findMany,
   findById,
-  updateLikes,
   findManyByFilters,
+  addLikes,
+  deleteLikes,
+  findLike,
+  findManyLikes
 };
 
 export default postRepository;

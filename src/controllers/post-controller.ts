@@ -17,11 +17,27 @@ export async function createPost(req: AdminAuthenticatedRequest, res: Response) 
   }
 }
 
-export async function getPosts(req: Request, res: Response) {
-  try {
-    const posts = await postService.getPosts();
+export async function getPostsById(req: Request, res: Response) {
+  const { postId } = req.params;
 
-    return res.status(httpStatus.OK).send(posts);
+  try {
+    const post = await postService.getPosts(Number(postId));
+
+    return res.status(httpStatus.OK).send(post);
+  } catch (error) {
+    if (error.name === "NotFoundError") return res.status(httpStatus.NOT_FOUND).send(error);
+
+    return res.sendStatus(httpStatus.INTERNAL_SERVER_ERROR);
+  }
+}
+
+export async function getLikesByPostId(req: Request, res: Response) {
+  const { postId } = req.params;
+
+  try {
+    const likes = await postService.getLikes(Number(postId));
+
+    return res.status(httpStatus.OK).send(likes);
   } catch (error) {
     if (error.name === "NotFoundError") return res.status(httpStatus.NOT_FOUND).send(error);
 
@@ -45,18 +61,31 @@ export async function getFilteredPosts(req: Request, res: Response) {
   }
 }
 
-export async function updateLikes(req: AuthenticatedRequest, res: Response) {
-  const { id } = req.params;
-  const { like } = req.body;
+export async function incrementLikes(req: AuthenticatedRequest, res: Response) {
+  const { postId } = req.body;
+  const { userId } = req;
 
   try {
-    await postService.updateLikes(Number(id), like);
+    await postService.updateLikes(Number(postId), userId);
 
-    return res.sendStatus(httpStatus.NO_CONTENT);
+    return res.sendStatus(httpStatus.CREATED);
   } catch (error) {
     if (error.name === "NotFoundError") return res.status(httpStatus.NOT_FOUND).send(error);
+    
+    return res.sendStatus(httpStatus.INTERNAL_SERVER_ERROR);
+  }
+}
 
-    if (error.name === "UnprocessableContent") return res.status(httpStatus.UNPROCESSABLE_ENTITY).send(error);
+export async function decreaseLikes(req: AuthenticatedRequest, res: Response) {
+  const { postId } = req.params;
+  const { userId } = req;
+
+  try {
+    await postService.excludeLikes(Number(postId), userId);
+
+    return res.sendStatus(httpStatus.OK);
+  } catch (error) {
+    if (error.name === "NotFoundError") return res.status(httpStatus.NOT_FOUND).send(error);
 
     return res.sendStatus(httpStatus.INTERNAL_SERVER_ERROR);
   }
