@@ -26,5 +26,5 @@ export const postFilterSchema = Joi.object({
   topicFilterIds: Joi.object({
     topicId: Joi.array().items(Joi.number()).required(),
   }).required(),
-  inputFilterValue: Joi.string().required(),
+  inputFilterValue: Joi.string().allow("").required(),
 });

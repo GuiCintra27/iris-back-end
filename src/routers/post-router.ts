@@ -7,7 +7,7 @@ import {
   getSearchFilteredSuggestions,
   incrementLikes,
 } from "../controllers";
-import { adminAuthenticateToken, authenticateToken, validateBody, validateParams } from "../middlewares";
+import { adminAuthenticateToken, authenticateToken, optionalAuthenticateToken, validateBody, validateParams } from "../middlewares";
 import { createPostSchema, postFilterSchema, postIdSchema, postSuggestionSchema, updateLikeSchema } from "../schemas";
 import { Router } from "express";
 
@@ -18,8 +18,8 @@ postRouter
   .get("/likes/:postId", getLikesByPostId)
   .post("/filter", validateBody(postFilterSchema), getFilteredPosts)
   .post("/", adminAuthenticateToken, validateBody(createPostSchema), createPost)
+  .post("/search", validateBody(postSuggestionSchema), optionalAuthenticateToken, getSearchFilteredSuggestions)
   .use(authenticateToken)
-  .post("/search", validateBody(postSuggestionSchema), getSearchFilteredSuggestions)
   .post("/likes", validateBody(updateLikeSchema), incrementLikes)
   .delete("/likes/:postId", validateParams(postIdSchema), decreaseLikes);
 
