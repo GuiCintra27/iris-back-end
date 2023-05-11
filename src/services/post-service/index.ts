@@ -60,6 +60,17 @@ export async function excludeLikes(postId: number, userId: number): Promise<void
   return;
 }
 
+export async function upsertRecentPost(postId: number, userId: number): Promise<void> {
+  const user = await userRepository.findById(userId);
+
+  if (!user) throw notFoundError();
+
+  const recentPost = await postRepository.getUserRecentPost(postId, userId);
+  console.log("test1");
+  await postRepository.upsertRecentPost(postId, userId, recentPost?.id);
+  return;
+}
+
 export async function getManyFilteredSuggestions(
   topicIdFilter: TopicIdFilter,
   inputFilterValue: string,
@@ -101,6 +112,7 @@ const postService = {
   excludeLikes,
   getLikes,
   getManyFilteredSuggestions,
+  upsertRecentPost,
 };
 
 export default postService;

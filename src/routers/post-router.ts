@@ -6,6 +6,7 @@ import {
   getPostsById,
   getSearchFilteredSuggestions,
   incrementLikes,
+  upsertRecentPost,
 } from "../controllers";
 import { adminAuthenticateToken, authenticateToken, optionalAuthenticateToken, validateBody, validateParams } from "../middlewares";
 import { createPostSchema, postFilterSchema, postIdSchema, postSuggestionSchema, updateLikeSchema } from "../schemas";
@@ -20,6 +21,7 @@ postRouter
   .post("/", adminAuthenticateToken, validateBody(createPostSchema), createPost)
   .post("/search", validateBody(postFilterSchema), optionalAuthenticateToken, getSearchFilteredSuggestions)
   .use(authenticateToken)
+  .put("/recent",validateBody(postIdSchema), upsertRecentPost)
   .post("/likes", validateBody(updateLikeSchema), incrementLikes)
   .delete("/likes/:postId", validateParams(postIdSchema), decreaseLikes);
 

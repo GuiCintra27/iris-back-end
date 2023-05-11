@@ -85,7 +85,7 @@ export async function incrementLikes(req: AuthenticatedRequest, res: Response) {
     return res.sendStatus(httpStatus.CREATED);
   } catch (error) {
     if (error.name === "NotFoundError") return res.status(httpStatus.NOT_FOUND).send(error);
-    
+
     return res.sendStatus(httpStatus.INTERNAL_SERVER_ERROR);
   }
 }
@@ -97,6 +97,19 @@ export async function decreaseLikes(req: AuthenticatedRequest, res: Response) {
   try {
     await postService.excludeLikes(Number(postId), userId);
 
+    return res.sendStatus(httpStatus.OK);
+  } catch (error) {
+    if (error.name === "NotFoundError") return res.status(httpStatus.NOT_FOUND).send(error);
+
+    return res.sendStatus(httpStatus.INTERNAL_SERVER_ERROR);
+  }
+}
+export async function upsertRecentPost(req: AuthenticatedRequest, res: Response) {
+  const { postId } = req.body;
+  const { userId } = req;
+
+  try {
+    await postService.upsertRecentPost(Number(postId), userId);
     return res.sendStatus(httpStatus.OK);
   } catch (error) {
     if (error.name === "NotFoundError") return res.status(httpStatus.NOT_FOUND).send(error);

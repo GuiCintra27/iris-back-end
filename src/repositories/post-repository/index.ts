@@ -56,17 +56,17 @@ function findManyForSearchLastVisited(
     ...filter.where.AND,
     recentlyVisited: {
       some: {
-        userId:{
-          equals: userId
-        }
-      }
+        userId: {
+          equals: userId,
+        },
+      },
     },
   };
 
   return prisma.posts.findMany({
     ...filter,
     orderBy: {
-      created_at: "desc",
+      updated_at: "desc",
     },
     select: {
       id: true,
@@ -80,25 +80,25 @@ function findManyForNormalSearch(
   topicIdsFilters: TopicIdFilter,
   inputValueFilter: string,
   take: number,
-  userId:number
+  userId: number,
 ) {
   const filter = createPrismaTopicFilter(topicIdsFilters, inputValueFilter);
 
   filter.where.AND = {
     ...filter.where.AND,
     recentlyVisited: {
-        every: {
-          userId:{
-            not: userId
-          }
-        }
+      every: {
+        userId: {
+          not: userId,
+        },
+      },
     },
   };
 
   return prisma.posts.findMany({
     ...filter,
     orderBy: {
-      created_at: "desc",
+      updated_at: "desc",
     },
     select: {
       id: true,
@@ -154,6 +154,28 @@ async function findLike(postId: number, userId: number): Promise<likes> {
   });
 }
 
+function getUserRecentPost(postId: number, userId: number) {
+  return prisma.recentlyVisited.findFirst({
+    where: {
+      AND: { userId: { equals: userId }, postId: { equals: postId } },
+    },
+  });
+}
+
+function upsertRecentPost(postId: number, userId: number, recentId: string = "add") {
+  console.log(recentId);
+  return prisma.recentlyVisited.upsert({
+    where: { id: recentId },
+    update: {
+      updatedAt: new Date(),
+    },
+    create: {
+      postId,
+      userId,
+    },
+  });
+}
+
 export type TopicIdFilter = {
   topicId: number[];
 };
@@ -171,7 +193,9 @@ const postRepository = {
   findLike,
   findManyLikes,
   findManyForSearchLastVisited,
-  findManyForNormalSearch
+  findManyForNormalSearch,
+  getUserRecentPost,
+  upsertRecentPost,
 };
 
 export default postRepository;
