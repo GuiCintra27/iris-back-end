@@ -61,14 +61,13 @@ export async function getFilteredPosts(req: Request, res: Response) {
   }
 }
 
-export async function getSearchFilteredSuggestions(req: Request, res: Response) {
+export async function getSearchFilteredSuggestions(req: AuthenticatedRequest, res: Response) {
   const { topicFilterIds, inputFilterValue } = req.body;
-  const { page } = req.headers as { page: string };
-  const pageNumber = Number(page) || 1;
+  const { userId } = req;
   const topicFilter = topicFilterIds as TopicIdFilter;
 
   try {
-    const filteredPosts = await postService.getManyFilteredPosts(topicFilter, inputFilterValue, pageNumber);
+    const filteredPosts = await postService.getManyFilteredSuggestions(topicFilter, inputFilterValue, userId);
 
     return res.status(httpStatus.OK).send(filteredPosts);
   } catch (error) {
