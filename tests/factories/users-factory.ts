@@ -10,10 +10,7 @@ export function createBodyUser() {
   };
 }
 
-export async function createUser(params: Partial<User> = {}): Promise<User> {
-  const incomingPassword = params.password || faker.internet.password(6);
-  const hashedPassword = await bcrypt.hash(incomingPassword, 10);
-
+async function createdCaracted( ) {
   const genderArr = await prisma.genders.findMany();
   let genderId: number;
   if (genderArr.length === 0) {
@@ -37,6 +34,42 @@ export async function createUser(params: Partial<User> = {}): Promise<User> {
   } else {
     pronounsId = pronounsArr[0].id;
   }
+
+  return {
+    sexualityId,
+    genderId,
+    pronounsId,
+  };
+}
+
+export async function generateValidBodyUser(type?: boolean) {
+  let sexuality = 1;
+  let gender = 1;
+  let pronouns = 1;
+
+  if(type) {
+    const { sexualityId, genderId, pronounsId } = await createdCaracted();
+    sexuality = sexualityId;
+    gender = genderId;
+    pronouns = pronounsId;
+  }
+
+  return {
+    name: faker.name.fullName(),
+    email: faker.internet.email(),
+    phoneNumber: faker.phone.number("2299286####"),
+    birthDay: (faker.date.birthdate({ min: 18, max: 65, mode: "age" })),
+    sexualityId: sexuality,
+    genderId: gender,
+    pronounsId: pronouns,
+    password: faker.internet.password(6),
+  };
+}
+
+export async function createUser(params: Partial<User> = {}): Promise<User> {
+  const incomingPassword = params.password || faker.internet.password(6);
+  const hashedPassword = await bcrypt.hash(incomingPassword, 10);
+  const { sexualityId, genderId, pronounsId } = await createdCaracted();
 
   return await prisma.users.create({
     data: {

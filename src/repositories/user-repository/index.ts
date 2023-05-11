@@ -41,22 +41,22 @@ async function create(data: Prisma.usersUncheckedCreateInput) {
 }
 
 async function registerData() {
-  const data = {sexualityId: {}, genderId: {}, pronounsId: {}};
+  const data = { sexualityId: {}, genderId: {}, pronounsId: {} };
 
   data.sexualityId = await prisma.sexualities.findMany({
-    select:{
+    select: {
       id: true,
       name: true
     }
   });
   data.genderId = await prisma.genders.findMany({
-    select:{
+    select: {
       id: true,
       name: true
     }
   });
   data.pronounsId = await prisma.pronouns.findMany({
-    select:{
+    select: {
       id: true,
       name: true
     }
