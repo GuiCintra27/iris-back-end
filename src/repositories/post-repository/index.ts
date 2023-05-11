@@ -55,9 +55,11 @@ function findManyForSearchLastVisited(
   filter.where.AND = {
     ...filter.where.AND,
     recentlyVisited: {
-      none: {
-        userId: userId,
-      },
+      some: {
+        userId:{
+          equals: userId
+        }
+      }
     },
   };
 
@@ -69,7 +71,6 @@ function findManyForSearchLastVisited(
     select: {
       id: true,
       title: true,
-      text: true,
     },
     take: MAX_LIMIT,
   });
@@ -79,8 +80,20 @@ function findManyForNormalSearch(
   topicIdsFilters: TopicIdFilter,
   inputValueFilter: string,
   take: number,
+  userId:number
 ) {
   const filter = createPrismaTopicFilter(topicIdsFilters, inputValueFilter);
+
+  filter.where.AND = {
+    ...filter.where.AND,
+    recentlyVisited: {
+        every: {
+          userId:{
+            not: userId
+          }
+        }
+    },
+  };
 
   return prisma.posts.findMany({
     ...filter,
@@ -90,7 +103,6 @@ function findManyForNormalSearch(
     select: {
       id: true,
       title: true,
-      text: true,
     },
     take,
   });

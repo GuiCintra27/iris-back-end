@@ -65,7 +65,6 @@ export async function getSearchFilteredSuggestions(req: AuthenticatedRequest, re
   const { topicFilterIds, inputFilterValue } = req.body;
   const { userId } = req;
   const topicFilter = topicFilterIds as TopicIdFilter;
-
   try {
     const filteredPosts = await postService.getManyFilteredSuggestions(topicFilter, inputFilterValue, userId);
 

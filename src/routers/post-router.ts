@@ -18,7 +18,7 @@ postRouter
   .get("/likes/:postId", getLikesByPostId)
   .post("/filter", validateBody(postFilterSchema), getFilteredPosts)
   .post("/", adminAuthenticateToken, validateBody(createPostSchema), createPost)
-  .post("/search", validateBody(postSuggestionSchema), optionalAuthenticateToken, getSearchFilteredSuggestions)
+  .post("/search", validateBody(postFilterSchema), optionalAuthenticateToken, getSearchFilteredSuggestions)
   .use(authenticateToken)
   .post("/likes", validateBody(updateLikeSchema), incrementLikes)
   .delete("/likes/:postId", validateParams(postIdSchema), decreaseLikes);

@@ -44,7 +44,7 @@ async function checkSessionAndToken(req: AuthenticatedRequest) {
 
     return userId;
   } catch (err) {
-    return err;
+    throw err;
   }
 }
 

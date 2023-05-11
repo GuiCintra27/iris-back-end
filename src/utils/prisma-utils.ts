@@ -38,6 +38,6 @@ export function createPrismaTopicFilter(topicIdsFilters: TopicIdFilter, inputVal
   return filter;
 }
 
-export interface PostsFilter extends Pick<posts, "id" | "title" | "text"> {
+export interface PostsFilter extends Pick<posts, "id" | "title"> {
   type: "new" | "recent";
 }
