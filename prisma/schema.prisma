@@ -85,11 +85,12 @@ model posts {
   title      String
   text       String
   image      String
-  likes      Int      @default(0)
+  postCover  String
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
   admins     admins   @relation(fields: [adminId], references: [id], onDelete: Cascade, onUpdate: Cascade, map: "posts_fk0")
   topics     topics   @relation(fields: [topicId], references: [id], onDelete: Cascade, onUpdate: Cascade, map: "topics_fk0")
+  likes      likes[]
 }
 
 model pronouns {
@@ -144,6 +145,7 @@ model users {
   donates     donates[]
   sessions    sessions[]
   volunteers  volunteers[]
+  likes       likes[]
 
   @@index([email])
 }
@@ -172,4 +174,14 @@ model topics {
   id      Int      @id(map: "topics_pk") @default(autoincrement())
   name    String
   posts   posts[]
+}
+
+model likes {
+  id        Int      @id @default(autoincrement())
+  postId    Int
+  userId    Int
+  createdAt DateTime @default(now()) @db.Timestamp(6)
+  updatedAt DateTime @default(now()) @db.Timestamp(6)
+  posts     posts    @relation(fields: [postId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  users     users    @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 }

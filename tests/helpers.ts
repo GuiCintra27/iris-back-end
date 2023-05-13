@@ -14,8 +14,12 @@ export async function cleanDb() {
   await prisma.newsletter.deleteMany({});
   await prisma.sessions.deleteMany({});
   await prisma.admin_sessions.deleteMany({});
+  await prisma.genders.deleteMany({});
+  await prisma.sexualities.deleteMany({});
+  await prisma.pronouns.deleteMany({});
   await prisma.users.deleteMany({});
   await prisma.admins.deleteMany({});
+  await prisma.likes.deleteMany({});
 }
 
 export async function generateValidToken(user?: User) {

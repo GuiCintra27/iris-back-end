@@ -1,5 +1,5 @@
 import { prisma } from "../../config";
-import { posts } from "@prisma/client";
+import { likes, posts, Prisma } from "@prisma/client";
 
 async function insert(data: PostParams): Promise<void> {
   await prisma.posts.create({
@@ -9,14 +9,44 @@ async function insert(data: PostParams): Promise<void> {
   return;
 }
 
-async function findMany(): Promise<GetPost[]> {
-  return await prisma.posts.findMany({
+async function findManyByFilters(
+  topicIdsFilters: TopicIdFilter,
+  inputValueFilter: string,
+  pageNumber: number,
+): Promise<GetPost[]> {
+  const andClause: Prisma.Enumerable<Prisma.postsWhereInput> = [];
+    
+  const filter: { where: Prisma.postsWhereInput } = {
+    where: {
+      AND: andClause,
+    },
+  };
+
+  if (topicIdsFilters.topicId?.length !== 0) {
+    andClause.push({ topicId: { in: topicIdsFilters.topicId } });
+  }
+
+  if (inputValueFilter !== "") {
+    andClause.push({
+      OR: [
+        { title: { contains: inputValueFilter, mode: "insensitive" } },
+        { text: { contains: inputValueFilter, mode: "insensitive" } },
+      ],
+    });
+  }
+
+  return prisma.posts.findMany({
+    ...filter,
+    orderBy: {
+      id: "desc",
+    },
     select: {
       id: true,
       title: true,
       topics: true,
       text: true,
       image: true,
+      postCover: true,
       likes: true,
       created_at: true,
       admins: {
@@ -26,39 +56,9 @@ async function findMany(): Promise<GetPost[]> {
         },
       },
     },
+    skip: (pageNumber - 1) * 6,
+    take: 6,
   });
-}
-
-async function findManyByFilteredIds(postFilters: PostFilters): Promise<GetPost[]> {
-  let filter = {
-    where: {}
-  };
-
-  if (postFilters.topicId.length !== 0) {
-      filter.where = {...filter.where, topicId: { in: postFilters.topicId }}
-  }
-
-  return prisma.posts.findMany({
-      ...filter,
-      orderBy:{
-          id: 'desc'
-      },
-      select: {
-        id: true,
-        title: true,
-        topics: true,
-        text: true,
-        image: true,
-        likes: true,
-        created_at: true,
-        admins: {
-          select: {
-            name: true,
-            photo: true,
-          },
-        },
-      },
-    });
 }
 
 async function findById(id: number): Promise<posts> {
@@ -66,25 +66,50 @@ async function findById(id: number): Promise<posts> {
     where: {
       id,
     },
+    include: {
+      admins: true,
+      topics: true
+    }
   });
 }
 
-async function updateLikes(id: number, value: number) {
-  return await prisma.posts.update({
+async function findManyLikes(postId: number): Promise<likes[]> {
+  return await prisma.likes.findMany({
     where: {
-      id,
-    },
+      postId
+    }
+  });
+}
+
+async function addLikes(postId: number, userId: number): Promise<likes> {
+  return await prisma.likes.create({
     data: {
-      likes: {
-        increment: value,
-      },
+      postId,
+      userId
     },
   });
 }
 
-export type PostFilters = {
-  topicId: number[]
+async function deleteLikes(id: number): Promise<likes> {
+  return await prisma.likes.delete({
+    where: {
+      id
+    },
+  });
 }
+
+async function findLike(postId: number, userId: number): Promise<likes> {
+  return await prisma.likes.findFirst({
+    where: {
+      postId,
+      userId
+    },
+  });
+}
+
+export type TopicIdFilter = {
+  topicId: number[];
+};
 
 export type GetPost = Omit<PostParams, "adminId" | "topicId"> & { admins: { name: string; photo: string } };
 
@@ -92,10 +117,12 @@ export type PostParams = Omit<posts, "id" | "updated_at">;
 
 const postRepository = {
   insert,
-  findMany,
   findById,
-  updateLikes,
-  findManyByFilteredIds
+  findManyByFilters,
+  addLikes,
+  deleteLikes,
+  findLike,
+  findManyLikes
 };
 
 export default postRepository;
