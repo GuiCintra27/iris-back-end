@@ -1,4 +1,4 @@
-import postRepository, { GetPost, TopicIdFilter, PostParams } from "../../repositories/post-repository";
+import postRepository, { GetPost, TopicIdFilter, PostParams, orderByFilter } from "../../repositories/post-repository";
 import userRepository from "@/repositories/user-repository";
 import { likes, posts } from "@prisma/client";
 import { notFoundError } from "../../errors";
@@ -23,8 +23,8 @@ export async function getLikes(postId: number): Promise<likes[]> {
   return likes;
 }
 
-export async function getManyFilteredPosts(topicIdFilter: TopicIdFilter, inputFilterValue: string, pageNumber: number): Promise<GetPost[]> {
-  const posts = await postRepository.findManyByFilters(topicIdFilter, inputFilterValue, pageNumber);
+export async function getManyFilteredPosts(topicIdFilter: TopicIdFilter, orderBy: orderByFilter, inputFilterValue: string, pageNumber: number): Promise<GetPost[]> {
+  const posts = await postRepository.findManyByFilters(topicIdFilter, orderBy, inputFilterValue, pageNumber);
   if (posts.length === 0) throw notFoundError();
 
   return posts;
