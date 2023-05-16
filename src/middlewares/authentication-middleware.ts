@@ -6,13 +6,32 @@ import { unauthorizedError } from "../errors";
 import { prisma } from "../config";
 
 export async function authenticateToken(req: AuthenticatedRequest, res: Response, next: NextFunction) {
-  const authHeader = req.header("Authorization");
-  if (!authHeader) return generateUnauthorizedResponse(res);
-
-  const token = authHeader.split(" ")[1];
-  if (!token) return generateUnauthorizedResponse(res);
-
   try {
+    const userId = await checkSessionAndToken(req);
+
+    req.userId = userId;
+    return next();
+  } catch (err) {
+    return generateUnauthorizedResponse(res);
+  }
+}
+
+export async function optionalAuthenticateToken(req: AuthenticatedRequest, res: Response, next: NextFunction) {
+  try {
+    const userId = await checkSessionAndToken(req);
+
+    req.userId = userId;
+  } catch (err) {
+  } finally {
+    return next();
+  }
+}
+
+async function checkSessionAndToken(req: AuthenticatedRequest) {
+  try {
+    const token = req.header("Authorization")?.split(" ")[1];
+    if (!token) throw new Error("Token not found");
+
     const { userId } = jwt.verify(token, process.env.JWT_SECRET) as JWTPayload;
 
     const session = await prisma.sessions.findFirst({
@@ -20,13 +39,12 @@ export async function authenticateToken(req: AuthenticatedRequest, res: Response
         token,
       },
     });
-    if (!session) return generateUnauthorizedResponse(res);
 
-    req.userId = userId;
-    //TODO mudar aqui
-    return next();
+    if (!session) throw new Error("Session not found");
+
+    return userId;
   } catch (err) {
-    return generateUnauthorizedResponse(res);
+    throw err;
   }
 }
 

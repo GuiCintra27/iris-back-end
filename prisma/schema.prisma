@@ -1,5 +1,5 @@
 generator client {
-  provider = "prisma-client-js"
+  provider      = "prisma-client-js"
   binaryTargets = ["native", "debian-openssl-3.0.x"]
 }
 
@@ -79,18 +79,19 @@ model offices {
 }
 
 model posts {
-  id         Int      @id(map: "posts_pk") @default(autoincrement())
-  adminId    Int
-  topicId    Int
-  title      String
-  text       String
-  image      String
-  postCover  String
-  created_at DateTime @default(now())
-  updated_at DateTime @updatedAt
-  admins     admins   @relation(fields: [adminId], references: [id], onDelete: Cascade, onUpdate: Cascade, map: "posts_fk0")
-  topics     topics   @relation(fields: [topicId], references: [id], onDelete: Cascade, onUpdate: Cascade, map: "topics_fk0")
-  likes      likes[]
+  id              Int               @id(map: "posts_pk") @default(autoincrement())
+  adminId         Int
+  topicId         Int
+  title           String
+  text            String
+  image           String
+  postCover       String
+  created_at      DateTime          @default(now())
+  updated_at      DateTime          @updatedAt
+  admins          admins            @relation(fields: [adminId], references: [id], onDelete: Cascade, onUpdate: Cascade, map: "posts_fk0")
+  topics          topics            @relation(fields: [topicId], references: [id], onDelete: Cascade, onUpdate: Cascade, map: "topics_fk0")
+  likes           likes[]
+  recentlyVisited recentlyVisited[]
 }
 
 model pronouns {
@@ -127,25 +128,26 @@ model skincolor {
 }
 
 model users {
-  id          Int          @id(map: "users_pk") @default(autoincrement())
-  name        String
-  email       String       @unique
-  phoneNumber String       @unique @db.VarChar(11)
-  birthDay    DateTime     @db.Date
-  sexualityId Int
-  genderId    Int
-  pronounsId  Int
-  password    String
-  created_at  DateTime     @default(now())
-  updated_at  DateTime     @updatedAt
-  sexualities sexualities  @relation(fields: [sexualityId], references: [id], onDelete: Cascade, onUpdate: Cascade, map: "users_fk0")
-  genders     genders      @relation(fields: [genderId], references: [id], onDelete: Cascade, onUpdate: Cascade, map: "users_fk1")
-  pronouns    pronouns     @relation(fields: [pronounsId], references: [id])
-  contact     contact[]
-  donates     donates[]
-  sessions    sessions[]
-  volunteers  volunteers[]
-  likes       likes[]
+  id              Int               @id(map: "users_pk") @default(autoincrement())
+  name            String
+  email           String            @unique
+  phoneNumber     String            @unique @db.VarChar(11)
+  birthDay        DateTime          @db.Date
+  sexualityId     Int
+  genderId        Int
+  pronounsId      Int
+  password        String
+  created_at      DateTime          @default(now())
+  updated_at      DateTime          @updatedAt
+  sexualities     sexualities       @relation(fields: [sexualityId], references: [id], onDelete: Cascade, onUpdate: Cascade, map: "users_fk0")
+  genders         genders           @relation(fields: [genderId], references: [id], onDelete: Cascade, onUpdate: Cascade, map: "users_fk1")
+  pronouns        pronouns          @relation(fields: [pronounsId], references: [id])
+  contact         contact[]
+  donates         donates[]
+  sessions        sessions[]
+  volunteers      volunteers[]
+  likes           likes[]
+  recentlyVisited recentlyVisited[]
 
   @@index([email])
 }
@@ -171,9 +173,9 @@ model volunteers {
 }
 
 model topics {
-  id      Int      @id(map: "topics_pk") @default(autoincrement())
-  name    String
-  posts   posts[]
+  id    Int     @id(map: "topics_pk") @default(autoincrement())
+  name  String
+  posts posts[]
 }
 
 model likes {
@@ -184,4 +186,14 @@ model likes {
   updatedAt DateTime @default(now()) @db.Timestamp(6)
   posts     posts    @relation(fields: [postId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   users     users    @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+}
+
+model recentlyVisited {
+  id        String   @id @default(uuid())
+  userId    Int
+  postId    Int
+  createdAt DateTime @default(now()) @db.Timestamp(6)
+  updatedAt DateTime @default(now()) @db.Timestamp(6)
+  users     users    @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  posts     posts    @relation(fields: [postId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 }
