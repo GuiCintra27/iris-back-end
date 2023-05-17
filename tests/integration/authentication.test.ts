@@ -1,13 +1,15 @@
-
-import app, {init} from "../../src/app"
+import app, { init } from "../../src/app";
 import { faker } from "@faker-js/faker";
 import httpStatus from "http-status";
 import supertest from "supertest";
-import { createUser } from "../factories";
+import { createBodyUser, createUser } from "../factories";
 import { cleanDb } from "../helpers";
 
 beforeAll(async () => {
   await init();
+});
+
+beforeEach(async () => {
   await cleanDb();
 });
 
@@ -29,13 +31,8 @@ describe("POST /auth/sign-in", () => {
   });
 
   describe("when body is valid", () => {
-    const generateValidBody = () => ({
-      email: faker.internet.email(),
-      password: faker.internet.password(6),
-    });
-
     it("should respond with status 401 if there is no user for given email", async () => {
-      const body = generateValidBody();
+      const body = createBodyUser();
 
       const response = await server.post("/auth/sign-in").send(body);
 
@@ -43,7 +40,7 @@ describe("POST /auth/sign-in", () => {
     });
 
     it("should respond with status 401 if there is a user for given email but password is not correct", async () => {
-      const body = generateValidBody();
+      const body = createBodyUser();
       await createUser(body);
 
       const response = await server.post("/auth/sign-in").send({
@@ -56,7 +53,7 @@ describe("POST /auth/sign-in", () => {
 
     describe("when credentials are valid", () => {
       it("should respond with status 200", async () => {
-        const body = generateValidBody();
+        const body = createBodyUser();
         await createUser(body);
 
         const response = await server.post("/auth/sign-in").send(body);
@@ -65,7 +62,7 @@ describe("POST /auth/sign-in", () => {
       });
 
       it("should respond with session token", async () => {
-        const body = generateValidBody();
+        const body = createBodyUser();
         await createUser(body);
 
         const response = await server.post("/auth/sign-in").send(body);

@@ -1,19 +1,17 @@
 import { insertContactSchema, deleteContactSchema } from "../../src/schemas";
+import { generateValidDeleteInput, generateValidInsertInput } from "../factories";
 import { faker } from "@faker-js/faker";
-
-export const generateValidInsertInput = () => ({
-  name: faker.name.fullName(),
-  email: faker.internet.email(),
-  telephone: faker.phone.number("2299286####"),
-  message: faker.lorem.sentences(4),
-});
-
-export const generateValidDeleteInput = () => ({
-  id: faker.datatype.number(),
-});
 
 describe("contactSchema", () => {
   describe("Insert contact message schema", () => {
+    it("should return no error if input is valid", () => {
+      const input = generateValidInsertInput();
+
+      const { error } = insertContactSchema.validate(input);
+
+      expect(error).toBeUndefined();
+    });
+
     describe("when email is not valid", () => {
       it("should return error if email is not present", () => {
         const input = generateValidInsertInput();
@@ -47,7 +45,7 @@ describe("contactSchema", () => {
       it("should return error if name does not follow valid name format", () => {
         const input = generateValidInsertInput();
 
-        const { error } = insertContactSchema.validate({...input, name: faker.datatype.number()});
+        const { error } = insertContactSchema.validate({ ...input, name: faker.datatype.number() });
 
         expect(error).toBeDefined();
       });
@@ -104,7 +102,7 @@ describe("contactSchema", () => {
       it("should return error if message does not follow valid message format", () => {
         const input = generateValidInsertInput();
 
-        const { error } = insertContactSchema.validate({...input, message: faker.lorem.word()});
+        const { error } = insertContactSchema.validate({ ...input, message: faker.lorem.word() });
 
         expect(error).toBeDefined();
       });
@@ -118,17 +116,17 @@ describe("contactSchema", () => {
         expect(error).toBeDefined();
       });
     });
-
-    it("should return no error if input is valid", () => {
-      const input = generateValidInsertInput();
-
-      const { error } = insertContactSchema.validate(input);
-
-      expect(error).toBeUndefined();
-    });
   });
 
   describe("Delete contact message schema", () => {
+    it("should return no error if input is valid", () => {
+      const input = generateValidDeleteInput();
+
+      const { error } = deleteContactSchema.validate(input);
+
+      expect(error).toBeUndefined();
+    });
+
     describe("when id is not valid", () => {
       it("should return error if id is not present", () => {
         const input = generateValidDeleteInput();
@@ -142,18 +140,10 @@ describe("contactSchema", () => {
       it("should return error if id does not follow valid id format", () => {
         const input = generateValidDeleteInput();
 
-        const { error } = insertContactSchema.validate({...input, id: faker.lorem.word()});
+        const { error } = insertContactSchema.validate({ ...input, id: faker.lorem.word() });
 
         expect(error).toBeDefined();
       });
-    });
-
-    it("should return no error if input is valid", () => {
-      const input = generateValidDeleteInput();
-
-      const { error } = deleteContactSchema.validate(input);
-
-      expect(error).toBeUndefined();
     });
   });
 });

@@ -1,12 +1,11 @@
 
-import app, {init} from "../../src/app"
+import app, { init } from "../../src/app";
 import { faker } from "@faker-js/faker";
 import httpStatus from "http-status";
 import supertest from "supertest";
-import { createNewsLetterParticipant } from "../factories/news-letter-factory.";
+import { createNewsLetterParticipant, generateValidNewsLetterInput } from "../factories/news-letter-factory.";
 import { cleanDb, generateValidAdminToken } from "../helpers";
 import * as jwt from "jsonwebtoken";
-import { generateValidNewsLetterInput } from "../../src/schemas/news-letter-schema.test";
 import { createAdmin } from "../factories/admin-factory";
 
 beforeAll(async () => {
@@ -86,7 +85,6 @@ describe("POST /news-letter", () => {
 
     it("should return 409 when email is already registered", async () => {
       const input = generateValidNewsLetterInput();
-
       await createNewsLetterParticipant(input.email);
 
       const response = await server.post("/news-letter").send(input);
@@ -94,10 +92,9 @@ describe("POST /news-letter", () => {
       expect(response.status).toBe(httpStatus.CONFLICT);
     });
 
-    describe("When input is valid", () => {
-      const input = generateValidNewsLetterInput();
-
+    describe("When input is valid", () => {   
       it("Should return 204", async () => {
+        const input = generateValidNewsLetterInput();
         const response = await server.post("/news-letter").send(input);
 
         expect(response.status).toBe(httpStatus.NO_CONTENT);

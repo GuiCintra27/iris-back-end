@@ -17,7 +17,7 @@ async function signIn(params: SignInParams): Promise<SignInResult> {
   const token = await createSession(user.id);
 
   return {
-    user: {id: user.id, email: user.email},
+    user: { id: user.id, email: user.email },
     token,
   };
 }
@@ -51,7 +51,7 @@ async function signInGoogle(params: SignInGoogleParams): Promise<SignInResult> {
   const token = await createSession(user.id);
 
   return {
-    user: {id: user.id, email: user.email},
+    user: { id: user.id, email: user.email },
     token,
   };
 }
@@ -87,10 +87,9 @@ type SignInResult = {
 
 type GetUserOrFailResult = Pick<User, "id" | "email" | "password">;
 
-const authenticationService = {
+export const authenticationService = {
   signIn,
   signInGoogle,
 };
 
-export default authenticationService;
 export * from "./errors";

@@ -1,13 +1,11 @@
-
-import app, {init} from "../../src/app"
+import app, { init } from "../../src/app";
 import { faker } from "@faker-js/faker";
 import httpStatus from "http-status";
 import supertest from "supertest";
 import { cleanDb, generateValidAdminToken, generateValidToken } from "../helpers";
 import * as jwt from "jsonwebtoken";
 import { createAdmin } from "../factories/admin-factory";
-import { createDonate, getDonates } from "../factories";
-import { createUser } from "../factories";
+import { createUser, createDonate, getDonates, generateValidInputDonate } from "../factories";
 
 beforeAll(async () => {
   await init();
@@ -57,7 +55,7 @@ describe("GET /donate", () => {
       const admin = await createAdmin();
       const user = await createUser();
       const token = await generateValidAdminToken(admin);
-      const input = { amount: faker.datatype.number({ min: 5 }) };
+      const input = generateValidInputDonate();
 
       await createDonate(user.id, input.amount);
       await createDonate(user.id, input.amount);
@@ -109,7 +107,7 @@ describe("GET /donate", () => {
         const admin = await createAdmin();
         const user = await createUser();
         const token = await generateValidAdminToken(admin);
-        const input = { amount: faker.datatype.number({ min: 5 }) };
+        const input = generateValidInputDonate();
 
         await createDonate(user.id, input.amount);
         await createDonate(user.id, input.amount);
@@ -126,10 +124,6 @@ describe("GET /donate", () => {
 });
 
 describe("POST /donate", () => {
-  const generateValidInput = () => ({
-    amount: faker.datatype.number({ min: 5 }),
-  });
-
   it("should respond with status 401 if no token is given", async () => {
     const response = await server.post("/donate");
 
@@ -166,19 +160,19 @@ describe("POST /donate", () => {
     it("should return 400 when given amount does not follow valid amount format", async () => {
       const user = await createUser();
       const token = await generateValidToken(user);
-      const input = generateValidInput();
+      const input = generateValidInputDonate();
 
-      const response = await server.post("/donate").set("Authorization", `Bearer ${token}`).send({...input, amount: faker.lorem.word()});
+      const response = await server.post("/donate").set("Authorization", `Bearer ${token}`).send({ ...input, amount: faker.lorem.word() });
 
       expect(response.status).toBe(httpStatus.BAD_REQUEST);
     });
 
     describe("when body is valid", () => {
-      const input = generateValidInput();
-
       it("Should return 201 and register donate in database", async () => {
         const user = await createUser();
         const token = await generateValidToken(user);
+        const input = generateValidInputDonate();
+        delete input.id;
 
         const response = await server.post("/donate").set("Authorization", `Bearer ${token}`).send(input);
         const donates = await getDonates();

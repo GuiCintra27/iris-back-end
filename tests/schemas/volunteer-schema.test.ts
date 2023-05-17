@@ -1,20 +1,11 @@
 import { insertVolunteerSchema, updateVolunteerSchema } from "../../src/schemas";
 import { faker } from "@faker-js/faker";
+import { generateValidInputVolunteer } from "../factories";
 
 describe("insertVolunteerSchema", () => {
-  const generateValidInput = () => ({
-    linkedIn: faker.internet.url(),
-    irisParticipant: faker.datatype.boolean(),
-    occupation: faker.lorem.word(),
-    skinColorId: 1,
-    officeId: 1,
-    applyingReason: faker.lorem.sentences(3),
-    experience: faker.lorem.word(),
-  });
-
   describe("when LinkedIn is not valid", () => {
     it("should return no error if linkedIn is not present", () => {
-      const input = generateValidInput();
+      const input = generateValidInputVolunteer();
       delete input.linkedIn;
 
       const { error } = insertVolunteerSchema.validate(input);
@@ -23,9 +14,9 @@ describe("insertVolunteerSchema", () => {
     });
 
     it("should return error if linkedIn does not follow valid format", () => {
-      const input = generateValidInput();
+      const input = generateValidInputVolunteer();
 
-      const { error } = insertVolunteerSchema.validate({...input, linkedIn: faker.datatype.number()});
+      const { error } = insertVolunteerSchema.validate({ ...input, linkedIn: faker.datatype.number() });
 
       expect(error).toBeDefined();
     });
@@ -33,7 +24,7 @@ describe("insertVolunteerSchema", () => {
 
   describe("when IrisParticipant is not valid", () => {
     it("should return error if irisParticipant is not present", () => {
-      const input = generateValidInput();
+      const input = generateValidInputVolunteer();
       delete input.irisParticipant;
 
       const { error } = insertVolunteerSchema.validate({});
@@ -42,17 +33,17 @@ describe("insertVolunteerSchema", () => {
     });
 
     it("should return error if irisParticipant does not follow valid format", () => {
-      const input = generateValidInput();
+      const input = generateValidInputVolunteer();
 
-      const { error } = insertVolunteerSchema.validate({...input, irisParticipant: faker.datatype.number()});
+      const { error } = insertVolunteerSchema.validate({ ...input, irisParticipant: faker.datatype.number() });
 
       expect(error).toBeDefined();
     });
 
     it("should return error if irisParticipant does not follow valid format", () => {
-      const input = generateValidInput();
+      const input = generateValidInputVolunteer();
 
-      const { error } = insertVolunteerSchema.validate({...input, irisParticipant: faker.lorem.word()});
+      const { error } = insertVolunteerSchema.validate({ ...input, irisParticipant: faker.lorem.word() });
 
       expect(error).toBeDefined();
     });
@@ -60,7 +51,7 @@ describe("insertVolunteerSchema", () => {
 
   describe("when Occupation is not valid", () => {
     it("should return error if occupation is not present", () => {
-      const input = generateValidInput();
+      const input = generateValidInputVolunteer();
       delete input.occupation;
 
       const { error } = insertVolunteerSchema.validate({});
@@ -69,9 +60,9 @@ describe("insertVolunteerSchema", () => {
     });
 
     it("should return error if occupation does not follow valid format", () => {
-      const input = generateValidInput();
+      const input = generateValidInputVolunteer();
 
-      const { error } = insertVolunteerSchema.validate({...input, occupation: faker.datatype.number()});
+      const { error } = insertVolunteerSchema.validate({ ...input, occupation: faker.datatype.number() });
 
       expect(error).toBeDefined();
     });
@@ -79,7 +70,7 @@ describe("insertVolunteerSchema", () => {
 
   describe("when SkinColorId is not valid", () => {
     it("should return error if skinColorId is not present", () => {
-      const input = generateValidInput();
+      const input = generateValidInputVolunteer();
       delete input.skinColorId;
 
       const { error } = insertVolunteerSchema.validate({});
@@ -88,9 +79,9 @@ describe("insertVolunteerSchema", () => {
     });
 
     it("should return error if skinColorId does not follow valid format", () => {
-      const input = generateValidInput();
+      const input = generateValidInputVolunteer();
 
-      const { error } = insertVolunteerSchema.validate({...input, skinColorId: faker.lorem.word()});
+      const { error } = insertVolunteerSchema.validate({ ...input, skinColorId: faker.lorem.word() });
 
       expect(error).toBeDefined();
     });
@@ -98,7 +89,7 @@ describe("insertVolunteerSchema", () => {
 
   describe("when OfficeId is not valid", () => {
     it("should return error if officeId is not present", () => {
-      const input = generateValidInput();
+      const input = generateValidInputVolunteer();
       delete input.officeId;
 
       const { error } = insertVolunteerSchema.validate({});
@@ -107,9 +98,9 @@ describe("insertVolunteerSchema", () => {
     });
 
     it("should return error if officeId does not follow valid format", () => {
-      const input = generateValidInput();
+      const input = generateValidInputVolunteer();
 
-      const { error } = insertVolunteerSchema.validate({...input, officeId: faker.lorem.word()});
+      const { error } = insertVolunteerSchema.validate({ ...input, officeId: faker.lorem.word() });
 
       expect(error).toBeDefined();
     });
@@ -117,7 +108,7 @@ describe("insertVolunteerSchema", () => {
 
   describe("when ApplyingReason is not valid", () => {
     it("should return error if applyingReason is not present", () => {
-      const input = generateValidInput();
+      const input = generateValidInputVolunteer();
       delete input.applyingReason;
 
       const { error } = insertVolunteerSchema.validate({});
@@ -126,15 +117,15 @@ describe("insertVolunteerSchema", () => {
     });
 
     it("should return error if applyingReason does not follow valid format", () => {
-      const input = generateValidInput();
+      const input = generateValidInputVolunteer();
 
-      const { error } = insertVolunteerSchema.validate({...input, applyingReason: faker.datatype.number()});
+      const { error } = insertVolunteerSchema.validate({ ...input, applyingReason: faker.datatype.number() });
 
       expect(error).toBeDefined();
     });
 
     it("should return error if applyingReason does not reach minimum length", () => {
-      const input = generateValidInput();
+      const input = generateValidInputVolunteer();
       input.applyingReason = faker.lorem.word();
 
       const { error } = insertVolunteerSchema.validate(input);
@@ -143,7 +134,7 @@ describe("insertVolunteerSchema", () => {
     });
 
     it("should return error if applyingReason has exceeded the maximum length", () => {
-      const input = generateValidInput();
+      const input = generateValidInputVolunteer();
       input.applyingReason = faker.lorem.paragraph(5);
       
       const { error } = insertVolunteerSchema.validate(input);
@@ -154,7 +145,7 @@ describe("insertVolunteerSchema", () => {
 
   describe("when Experience is not valid", () => {
     it("should return no error if experience is not present", () => {
-      const input = generateValidInput();
+      const input = generateValidInputVolunteer();
       delete input.experience;
 
       const { error } = insertVolunteerSchema.validate(input);
@@ -163,16 +154,16 @@ describe("insertVolunteerSchema", () => {
     });
 
     it("should return error if experience does not follow valid format", () => {
-      const input = generateValidInput();
+      const input = generateValidInputVolunteer();
 
-      const { error } = insertVolunteerSchema.validate({...input, experience: faker.datatype.number()});
+      const { error } = insertVolunteerSchema.validate({ ...input, experience: faker.datatype.number() });
 
       expect(error).toBeDefined();
     });
   });
 
   it("should return no error if input is valid", () => {
-    const input = generateValidInput();
+    const input = generateValidInputVolunteer();
 
     const { error } = insertVolunteerSchema.validate(input);
 
@@ -181,7 +172,7 @@ describe("insertVolunteerSchema", () => {
 });
 
 describe("updateVolunteerSchema", () => {
-  const generateValidInput = () => ({
+  const generateValidInputVolunteer = () => ({
     id: faker.datatype.number(),
   });
 
@@ -193,15 +184,15 @@ describe("updateVolunteerSchema", () => {
     });
 
     it("should return error if id does not follow valid id format", () => {
-      const input = generateValidInput();
+      const input = generateValidInputVolunteer();
 
-      const { error } = updateVolunteerSchema.validate({...input, id: faker.lorem.word()});
+      const { error } = updateVolunteerSchema.validate({ ...input, id: faker.lorem.word() });
 
       expect(error).toBeDefined();
     });
 
     it("should return error if id is less than expected", () => {
-      const input = generateValidInput();
+      const input = generateValidInputVolunteer();
       input.id = faker.datatype.number({ min: -100, max: 1 });
 
       const { error } = updateVolunteerSchema.validate(input);
@@ -211,7 +202,7 @@ describe("updateVolunteerSchema", () => {
   });
 
   it("should return no error if input is valid", () => {
-    const input = generateValidInput();
+    const input = generateValidInputVolunteer();
 
     const { error } = updateVolunteerSchema.validate(input);
 

@@ -1,15 +1,17 @@
-
-import app, {init} from "../../src/app"
+import app, { init } from "../../src/app";
 import { prisma } from "../../src/config";
-import { duplicatedEmailError, duplicatedPhoneNumberError } from "../services/users-service";
+import { duplicatedEmailError, duplicatedPhoneNumberError } from "../../src/services";
 import { faker } from "@faker-js/faker";
 import httpStatus from "http-status";
 import supertest from "supertest";
-import { createUser } from "../factories";
+import { createUser, generateValidBodyUser } from "../factories";
 import { cleanDb } from "../helpers";
 
 beforeAll(async () => {
   await init();
+});
+
+beforeEach(async () => {
   await cleanDb();
 });
 
@@ -31,18 +33,8 @@ describe("POST /users", () => {
   });
 
   describe("when body is valid", () => {
-    const generateValidBody = () => ({
-      name: faker.name.fullName(),
-      email: faker.internet.email(),
-      phoneNumber: faker.phone.number("2299286####"),
-      sexualityId: 1,
-      genderId: 1,
-      pronounsId: 1,
-      password: faker.internet.password(6),
-    });
-
     it("should respond with status 409 when there is an user with given email", async () => {
-      const body = generateValidBody();
+      const body = await generateValidBodyUser();
       await createUser(body);
 
       const response = await server.post("/users").send(body);
@@ -52,7 +44,7 @@ describe("POST /users", () => {
     });
 
     it("should respond with status 409 when there is an user with given phone number", async () => {
-      const body = generateValidBody();
+      const body = await generateValidBodyUser();
       await createUser(body);
       body.email = "teste@gmail.com";
 
@@ -63,7 +55,7 @@ describe("POST /users", () => {
     });
 
     it("should respond with status 201 when given email is unique", async () => {
-      const body = generateValidBody();
+      const body = await generateValidBodyUser(true);
 
       const response = await server.post("/users").send(body);
 
@@ -71,15 +63,15 @@ describe("POST /users", () => {
     });
 
     it("should not return user password on body", async () => {
-      const body = generateValidBody();
+      const body = await generateValidBodyUser(true);
 
       const response = await server.post("/users").send(body);
-
+      
       expect(response.body).not.toHaveProperty("password");
     });
 
     it("should save user on db", async () => {
-      const body = generateValidBody();
+      const body = await generateValidBodyUser(true);
 
       await server.post("/users").send(body);
 

@@ -1,9 +1,6 @@
 import { newsLetterSchema } from "../../src/schemas";
 import { faker } from "@faker-js/faker";
-
-export const generateValidNewsLetterInput = () => ({
-  email: faker.internet.email(),
-});
+import { generateValidNewsLetterInput } from "../factories";
 
 describe("newsLetterSchema", () => {
   describe("when email is not valid", () => {
@@ -14,8 +11,7 @@ describe("newsLetterSchema", () => {
     });
 
     it("should return error if email does not follow valid email format", () => {
-      const input = generateValidNewsLetterInput();
-      input.email = faker.lorem.word();
+      const input = { email: faker.lorem.word() };
 
       const { error } = newsLetterSchema.validate(input);
 

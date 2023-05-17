@@ -1,12 +1,11 @@
-
-import app, {init} from "../../src/app"
+import app, { init } from "../../src/app";
 import { faker } from "@faker-js/faker";
 import httpStatus from "http-status";
 import supertest from "supertest";
 import { cleanDb, generateValidAdminToken, generateValidToken } from "../helpers";
 import * as jwt from "jsonwebtoken";
 import { createAdmin } from "../factories/admin-factory";
-import { createVolunteer, getVolunteers } from "../factories";
+import { createVolunteer, generateValidInputVolunteer, getVolunteers } from "../factories";
 import { createUser } from "../factories";
 
 beforeAll(async () => {
@@ -20,16 +19,6 @@ beforeEach(async () => {
 const server = supertest(app);
 
 describe("GET /volunteer", () => {
-  const generateValidInput = () => ({
-    linkedIn: String(faker.internet.url()),
-    irisParticipant: Boolean(faker.datatype.boolean()),
-    occupation: String(faker.lorem.word()),
-    skinColorId: 1,
-    officeId: 1,
-    applyingReason: String(faker.lorem.sentences(3)),
-    experience: String(faker.lorem.word()),
-  });
-
   it("should respond with status 401 if no token is given", async () => {
     const response = await server.get("/volunteer");
 
@@ -70,7 +59,7 @@ describe("GET /volunteer", () => {
       const user3 = await createUser();
       const user4 = await createUser();
       const token = await generateValidAdminToken(admin);
-      const input = generateValidInput();
+      const input = generateValidInputVolunteer();
 
       await createVolunteer({ userId: user.id, ...input });
       await createVolunteer({ userId: user2.id, ...input });
@@ -125,7 +114,7 @@ describe("GET /volunteer", () => {
         const user3 = await createUser();
         const user4 = await createUser();
         const token = await generateValidAdminToken(admin);
-        const input = generateValidInput();
+        const input = generateValidInputVolunteer();
 
         await createVolunteer({ userId: user.id, ...input });
         await createVolunteer({ userId: user2.id, ...input });
@@ -142,16 +131,6 @@ describe("GET /volunteer", () => {
 });
 
 describe("POST /volunteer", () => {
-  const generateValidInput = () => ({
-    linkedIn: faker.internet.url(),
-    irisParticipant: faker.datatype.boolean(),
-    occupation: faker.lorem.word(),
-    skinColorId: 1,
-    officeId: 1,
-    applyingReason: faker.lorem.sentences(3),
-    experience: faker.lorem.word(),
-  });
-
   it("should respond with status 401 if no token is given", async () => {
     const response = await server.post("/volunteer");
 
@@ -188,17 +167,16 @@ describe("POST /volunteer", () => {
     it("should return 400 when given IrisParticipant does not follow valid IrisParticipant format", async () => {
       const user = await createUser();
       const token = await generateValidToken(user);
-      const input = generateValidInput();
+      const input = generateValidInputVolunteer();
 
-      const response = await server.post("/volunteer").set("Authorization", `Bearer ${token}`).send({...input, irisParticipant: faker.datatype.number()});
+      const response = await server.post("/volunteer").set("Authorization", `Bearer ${token}`).send({ ...input, irisParticipant: faker.datatype.number() });
 
       expect(response.status).toBe(httpStatus.BAD_REQUEST);
     });
 
     describe("when body is valid", () => {
-      const input = generateValidInput();
-
       it("Should return 201 and register volunteer in database", async () => {
+        const input = generateValidInputVolunteer();
         const user = await createUser();
         const token = await generateValidToken(user);
 
@@ -214,16 +192,6 @@ describe("POST /volunteer", () => {
 });
 
 describe("PATCH /volunteer", () => {
-  const generateValidInput = () => ({
-    linkedIn: faker.internet.url(),
-    irisParticipant: faker.datatype.boolean(),
-    occupation: faker.lorem.word(),
-    skinColorId: 1,
-    officeId: 1,
-    applyingReason: faker.lorem.sentences(3),
-    experience: faker.lorem.word(),
-  });
-
   it("should respond with status 401 if no token is given", async () => {
     const response = await server.patch("/volunteer");
 
@@ -263,7 +231,7 @@ describe("PATCH /volunteer", () => {
         const admin = await createAdmin();
         const token = await generateValidAdminToken(admin);
         const user = await createUser();
-        const input = generateValidInput();
+        const input = generateValidInputVolunteer();
         const volunteer = await createVolunteer({ userId: user.id, ...input });
 
         const response = await server.patch(`/volunteer/${volunteer.id + 1}`).set("Authorization", `Bearer ${token}`);
@@ -276,7 +244,7 @@ describe("PATCH /volunteer", () => {
           const admin = await createAdmin();
           const token = await generateValidAdminToken(admin);
           const user = await createUser();
-          const input = generateValidInput();
+          const input = generateValidInputVolunteer();
           const volunteer = await createVolunteer({ userId: user.id, ...input });
 
           const response = await server.patch(`/volunteer/${volunteer.id}`).set("Authorization", `Bearer ${token}`);
