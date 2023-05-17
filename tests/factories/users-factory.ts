@@ -67,7 +67,8 @@ export async function generateValidBodyUser(type?: boolean) {
 }
 
 export async function createUser(params: Partial<User> = {}): Promise<User> {
-  const hashedPassword = await bcrypt.hash(params.password, 10);
+  const incomingPassword = params.password || faker.internet.password(6);
+  const hashedPassword = await bcrypt.hash(incomingPassword, 10);
   const { sexualityId, genderId, pronounsId } = await createdCaracted();
 
   return await prisma.users.create({
