@@ -5,7 +5,7 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { invalidCredentialsError, invalidGoogleCredentialError } from "./errors";
 import { SignInGoogleParams } from "@/schemas";
-import { googleClient } from "@/app";
+import axios from "axios";
 
 async function signIn(params: SignInParams): Promise<SignInResult> {
   const { email, password } = params;
@@ -23,18 +23,19 @@ async function signIn(params: SignInParams): Promise<SignInResult> {
 }
 
 async function signInGoogle(params: SignInGoogleParams): Promise<SignInResult> {
-  const { credential } = params;
-  let name, email, user;
-
+  const { accessToken } = params;
+  let name, email, birthday, user;
+  let testdata;
+  
   try {
-    const ticket = await googleClient.verifyIdToken({
-      idToken: credential,
-      audience: process.env.GOOGLE_CLIENT_ID,
-    });
+    const url = `https://people.googleapis.com/v1/people/me?key=${process.env.GOOGLE_API_KEY}&personFields=names,emailAddresses,birthdays,phoneNumbers,`;
+    const headers = { Authorization: `Bearer ${accessToken}` };
+    const { data } = await axios.get(url, { headers });
+    testdata = data;
 
-    const payload = ticket.getPayload();
-    email = payload.email;
-    name = payload.name;
+    name = data.names[0].displayName;
+    email = data.emailAddresses[0].value;
+    birthday = data.birthdays[0].date;
   } catch (err) {
     console.log(err);
     throw invalidGoogleCredentialError();
@@ -43,7 +44,7 @@ async function signInGoogle(params: SignInGoogleParams): Promise<SignInResult> {
   try {
     user = await getUserOrFail(email);
   } catch (error) {
-    error.data = { name, email };
+    error.data = { name, email, birthday };
     throw error;
   }
 
