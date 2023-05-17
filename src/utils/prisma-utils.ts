@@ -10,7 +10,7 @@ export function exclude<T, Key extends keyof T>(entity: T, ...keys: Key[]): Omit
 }
 
 export function createPrismaTopicFilter(topicIdsFilters: TopicIdFilter, inputValueFilter: string) {
-  const filter: { where: Prisma.postsWhereInput } = {
+  const filter: { where: Prisma.postsWhereInput } | { where: { AND: {} } } = {
     where: {
       AND: {},
     },
