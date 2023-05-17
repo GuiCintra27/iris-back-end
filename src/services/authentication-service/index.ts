@@ -17,7 +17,7 @@ async function signIn(params: SignInParams): Promise<SignInResult> {
   const token = await createSession(user.id);
 
   return {
-    user: {id: user.id, email: user.email},
+    user: { id: user.id, email: user.email },
     token,
   };
 }
