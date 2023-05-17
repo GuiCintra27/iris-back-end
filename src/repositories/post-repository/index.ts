@@ -12,6 +12,7 @@ async function insert(data: PostParams): Promise<void> {
 
 async function findManyByFilters(
   topicIdsFilters: TopicIdFilter,
+  orderBy: orderByFilter,
   inputValueFilter: string,
   MAX_LIMIT: number,
   pageNumber: number,
@@ -20,9 +21,7 @@ async function findManyByFilters(
 
   return prisma.posts.findMany({
     ...filter,
-    orderBy: {
-      created_at: "desc",
-    },
+    orderBy,
     select: {
       id: true,
       title: true,
@@ -178,6 +177,10 @@ function upsertRecentPost(postId: number, userId: number, recentId: string = "ad
 
 export type TopicIdFilter = {
   topicId: number[];
+};
+
+export type orderByFilter = {
+  id: "asc" | "desc";
 };
 
 export type GetPost = Omit<PostParams, "adminId" | "topicId"> & { admins: { name: string; photo: string } };

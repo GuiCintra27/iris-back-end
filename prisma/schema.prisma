@@ -92,6 +92,7 @@ model posts {
   topics          topics            @relation(fields: [topicId], references: [id], onDelete: Cascade, onUpdate: Cascade, map: "topics_fk0")
   likes           likes[]
   recentlyVisited recentlyVisited[]
+  @@index([id])
 }
 
 model pronouns {
