@@ -70,7 +70,8 @@ const userRepository = {
   findByPhoneNumber,
   create,
   registerData,
-  findById
+  findById,
+  
 };
 
 export default userRepository;

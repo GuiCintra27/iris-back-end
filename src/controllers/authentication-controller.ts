@@ -17,10 +17,10 @@ export async function singInPost(req: Request, res: Response) {
 }
 
 export async function singInGooglePost(req: Request, res: Response) {
-  const { credential } = req.body as SignInGoogleParams;
+  const { accessToken } = req.body as SignInGoogleParams;
 
   try {
-    const result = await authenticationService.signInGoogle({ credential });
+    const result = await authenticationService.signInGoogle({ accessToken });
     return res.status(httpStatus.OK).send(result);
   } catch (error) {
     if(error.name === "InvalidGoogleCredentialError") {
