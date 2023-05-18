@@ -1,4 +1,4 @@
-import topicsService from "@/services/topics-service";
+import topicsService from "../services/topics-service";
 import { Request, Response } from "express";
 import httpStatus from "http-status";
 

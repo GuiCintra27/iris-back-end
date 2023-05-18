@@ -4,7 +4,7 @@ import { users as User } from "@prisma/client";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { invalidCredentialsError, invalidGoogleCredentialError } from "./errors";
-import { SignInGoogleParams } from "@/schemas";
+import { SignInGoogleParams } from "../../schemas";
 import axios from "axios";
 
 async function signIn(params: SignInParams): Promise<SignInResult> {

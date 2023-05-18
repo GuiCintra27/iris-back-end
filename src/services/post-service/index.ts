@@ -1,8 +1,8 @@
 import postRepository, { GetPost, TopicIdFilter, PostParams, orderByFilter } from "../../repositories/post-repository";
-import userRepository from "@/repositories/user-repository";
+import userRepository from "../../repositories/user-repository";
 import { likes, posts } from "@prisma/client";
 import { notFoundError } from "../../errors";
-import { PostsFilter } from "@/utils/prisma-utils";
+import { PostsFilter } from "../../utils/prisma-utils";
 
 export async function createPost(postData: PostParams): Promise<void> {
   await postRepository.insert(postData);

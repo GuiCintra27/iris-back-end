@@ -1,5 +1,5 @@
-import { notFoundError } from "@/errors";
-import topicsRepository from "@/repositories/topics-repository";
+import { notFoundError } from "../../errors";
+import topicsRepository from "../../repositories/topics-repository";
 import { topics } from "@prisma/client";
 
 export async function getTopicsData(): Promise<topics[]> {

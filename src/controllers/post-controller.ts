@@ -3,7 +3,7 @@ import postService from "../services/post-service";
 import httpStatus from "http-status";
 import { AuthenticatedRequest } from "../middlewares";
 import { AdminAuthenticatedRequest } from "../middlewares/admin-authentication-middleware";
-import { orderByFilter, TopicIdFilter } from "@/repositories/post-repository";
+import { orderByFilter, TopicIdFilter } from "../repositories/post-repository";
 
 export async function createPost(req: AdminAuthenticatedRequest, res: Response) {
   const { adminId } = req;

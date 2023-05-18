@@ -1,4 +1,4 @@
-import { TopicIdFilter } from "@/repositories/post-repository";
+import { TopicIdFilter } from "../repositories/post-repository";
 import { Prisma, posts } from "@prisma/client";
 
 export function exclude<T, Key extends keyof T>(entity: T, ...keys: Key[]): Omit<T, Key> {

@@ -1,4 +1,4 @@
-import { createPrismaTopicFilter } from "@/utils/prisma-utils";
+import { createPrismaTopicFilter } from "../../utils/prisma-utils";
 import { prisma } from "../../config";
 import { likes, posts } from "@prisma/client";
 
