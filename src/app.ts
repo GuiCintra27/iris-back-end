@@ -28,7 +28,10 @@ const app = express();
 app
   .use(cors())
   .use(express.json())
-  .get("/health", (_req, res) => res.send("OK!"))
+  .use(express.static("public"))
+  .get('/', (req, res) => {
+    res.sendFile('index.html', {"root": '../public'});
+  })
   .use("/users", usersRouter)
   .use("/auth", authenticationRouter)
   .use("/news-letter", newsLetterRouter)
