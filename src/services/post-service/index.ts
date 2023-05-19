@@ -62,14 +62,20 @@ export async function excludeLikes(postId: number, userId: number): Promise<void
   return;
 }
 
-export async function upsertRecentPost(postId: number, userId: number): Promise<void> {
+export async function upsertRecentSearch(inputValue: string, userId: number): Promise<void> {
   const user = await userRepository.findById(userId);
-
   if (!user) throw notFoundError();
+  let recentlySearchId: string;
+  try {
+    const response = await postRepository.getRecentlySearchId(inputValue);
+    recentlySearchId = response.id;
+  } catch (err) {
+    const response = await postRepository.createRecentlySearchId(inputValue);
+    recentlySearchId = response.id;
+  }
+  const idOfRecentlySearchedByUser = await postRepository.getIdOfRecentlySearchedByUser(inputValue, userId);
+  await postRepository.upsertRecentSearch(recentlySearchId, userId, idOfRecentlySearchedByUser?.id);
 
-  const recentPost = await postRepository.getUserRecentPost(postId, userId);
-  
-  await postRepository.upsertRecentPost(postId, userId, recentPost?.id);
   return;
 }
 
@@ -79,15 +85,19 @@ export async function getManyFilteredSuggestions(
   userId?: number,
 ) {
   const MAX_LIMIT = 6;
-  let posts: PostsFilter[] = [];
+  let posts: PostsFilter[];
   if (userId) {
-    const recentPosts = await postRepository.findManyForSearchLastVisited(
-      topicIdFilter,
+    const recentlySearchedArray = await postRepository.findManyForSearchLastSearched(
       inputFilterValue,
       MAX_LIMIT,
       userId,
     );
-    const parseRecentPosts: PostsFilter[] = recentPosts.map((post) => ({ ...post, type: "recent" }));
+    const parseRecentPosts: PostsFilter[] = recentlySearchedArray.map(({ recentlySearched }) => ({
+      id: recentlySearched.id,
+      title: recentlySearched.value,
+      type: "recent",
+    }));
+
     posts = [...parseRecentPosts];
   }
 
@@ -114,7 +124,7 @@ const postService = {
   excludeLikes,
   getLikes,
   getManyFilteredSuggestions,
-  upsertRecentPost,
+  upsertRecentSearch,
 };
 
 export default postService;
