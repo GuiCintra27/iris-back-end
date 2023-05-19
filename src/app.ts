@@ -29,7 +29,7 @@ app
   .use(cors())
   .use(express.json())
   .use(express.static("public"))
-  .get('/', (req, res) => {
+  .get('/', (_req, res) => {
     res.sendFile('index.html', {"root": '../public'});
   })
   .use("/users", usersRouter)
@@ -39,7 +39,8 @@ app
   .use("/posts", postRouter)
   .use("/donate", donateRouter)
   .use("/volunteer", volunteerRouter)
-  .use("/topics", topicsRouter);
+  .use("/topics", topicsRouter)
+  .get("/health", (req, res) => res.send("OK"));
 
 export function init(): Promise<Express> {
   connectDb();

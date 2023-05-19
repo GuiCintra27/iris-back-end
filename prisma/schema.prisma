@@ -92,6 +92,7 @@ model posts {
   topics          topics            @relation(fields: [topicId], references: [id], onDelete: Cascade, onUpdate: Cascade, map: "topics_fk0")
   likes           likes[]
   recentlyVisited recentlyVisited[]
+  postsComments   postsComments[]
   @@index([id])
 }
 
@@ -149,6 +150,7 @@ model users {
   volunteers      volunteers[]
   likes           likes[]
   recentlyVisited recentlyVisited[]
+  postsComments   postsComments[]
 
   @@index([email])
 }
@@ -197,4 +199,15 @@ model recentlyVisited {
   updatedAt DateTime @default(now()) @db.Timestamp(6)
   users     users    @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   posts     posts    @relation(fields: [postId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+}
+
+model postsComments {
+  id        Int      @id @default(autoincrement())
+  postId    Int
+  userId    Int
+  text      String
+  createdAt DateTime @default(now()) @db.Timestamp(6)
+  updatedAt DateTime @default(now()) @db.Timestamp(6)
+  posts     posts    @relation(fields: [postId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  users     users    @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 }

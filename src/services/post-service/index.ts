@@ -1,6 +1,6 @@
 import postRepository, { GetPost, TopicIdFilter, PostParams, orderByFilter } from "../../repositories/post-repository";
 import userRepository from "../../repositories/user-repository";
-import { likes, posts } from "@prisma/client";
+import { likes, posts, postsComments } from "@prisma/client";
 import { notFoundError } from "../../errors";
 import { PostsFilter } from "../../utils/prisma-utils";
 
@@ -106,6 +106,34 @@ export async function getManyFilteredSuggestions(
   return posts;
 }
 
+// Comments ==
+
+export async function getComments(postId: number): Promise<postsComments[]> {
+  return await postRepository.findManyComments(postId);
+}
+
+export async function createComment(userId: number, postId: number, text: string): Promise<void> {
+  const user = await userRepository.findById(userId);
+  if (!user) throw notFoundError();
+
+  const post = await postRepository.findById(postId);
+  if (!post) throw notFoundError();
+
+  await postRepository.insertComment({ userId, postId, text });
+}
+
+export async function excludeComment(userId: number, commentId: number): Promise<void> {
+  const user = await userRepository.findById(userId);
+  if (!user) throw notFoundError();
+
+  const comment = await postRepository.findComment(commentId);
+  if (!comment) throw notFoundError();
+
+  await postRepository.deleteComment(commentId);
+}
+
+// Export ==
+
 const postService = {
   createPost,
   getPosts,
@@ -115,6 +143,9 @@ const postService = {
   getLikes,
   getManyFilteredSuggestions,
   upsertRecentPost,
+  getComments,
+  createComment,
+  excludeComment
 };
 
 export default postService;
