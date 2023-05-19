@@ -66,18 +66,15 @@ async function signInFacebook({ accessToken: userToken }: SignInGoogleParams): P
       `https://graph.facebook.com/debug_token?input_token=${userToken}&access_token=${access_token}`,
     );
     if (!validateToken.data.data.is_valid) throw invalidGoogleCredentialError();
-    const { email: rawUserEmail } = (await axios.get(
-      `https://graph.facebook.com/me?fields=email&access_token=${userToken}`,
-    )) as {
-      email: string;
-      id: string;
-    };
-    const parsedUserEmail = rawUserEmail.replace("\u0040", "@");
+    const {
+      data: { email: userEmail },
+    } = await axios.get(`https://graph.facebook.com/me?fields=email&access_token=${userToken}`);
 
-    user = await getUserOrFail(parsedUserEmail);
+    user = await getUserOrFail(userEmail);
 
     token = await createSession(user.id);
   } catch (err) {
+    err.status = 404;
     throw err;
   }
 
