@@ -13,3 +13,9 @@ export function invalidGoogleCredentialError(): ApplicationError {
     message: "google credential verification failed",
   };
 }
+export function invalidFacebookCredentialError(): ApplicationError {
+  return {
+    name: "InvalidFacebookcredentialError",
+    message: "facebook credential verification failed",
+  };
+}

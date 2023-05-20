@@ -162,7 +162,6 @@ function getUserRecentPost(postId: number, userId: number) {
 }
 
 function upsertRecentPost(postId: number, userId: number, recentId: string = "add") {
-  console.log(recentId);
   return prisma.recentlyVisited.upsert({
     where: { id: recentId },
     update: {

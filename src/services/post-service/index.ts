@@ -68,7 +68,7 @@ export async function upsertRecentPost(postId: number, userId: number): Promise<
   if (!user) throw notFoundError();
 
   const recentPost = await postRepository.getUserRecentPost(postId, userId);
-  console.log("test1");
+  
   await postRepository.upsertRecentPost(postId, userId, recentPost?.id);
   return;
 }
