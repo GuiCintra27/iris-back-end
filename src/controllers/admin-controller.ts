@@ -17,12 +17,16 @@ export async function singInAdmin(req: Request, res: Response) {
 
 export async function createNewAdmin(req: Request, res: Response) {
   try {
-    console.log("req.body controller", req.body);
     const newAdmin = await adminService.createNewAdmin(req.body);
-    console.log("oi");
+
     return res.status(httpStatus.CREATED).send(newAdmin);
   } catch (error) {
-    if (error.name === "InvalidCredentialsError") return res.sendStatus(httpStatus.UNAUTHORIZED);
+    if (error.name === "DuplicatedEmailError") {
+      return res.status(httpStatus.CONFLICT).send(error);
+    }
+    if (error.name === "DuplicatedCPFError") {
+      return res.status(httpStatus.CONFLICT).send(error);
+    }
     return res.status(httpStatus.INTERNAL_SERVER_ERROR);
   }
 }

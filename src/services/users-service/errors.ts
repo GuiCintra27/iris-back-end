@@ -13,3 +13,10 @@ export function duplicatedPhoneNumberError(): ApplicationError {
     message: "There is already an user with given phone number",
   };
 }
+
+export function duplicatedCPFError(): ApplicationError {
+  return {
+    name: "DuplicatedCPFError",
+    message: "There is already an user with given CPF number",
+  };
+}

@@ -3,6 +3,7 @@ import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 import { SignInParams, invalidCredentialsError } from "../authentication-service";
 import adminRepository from "../../repositories/admin-repository";
+import { duplicatedCPFError, duplicatedEmailError } from "../users-service";
 
 export async function singInAdmin(params: SignInParams): Promise<SignInResult> {
   const admin = await adminRepository.findByEmail(params.email);
@@ -25,13 +26,16 @@ export async function singInAdmin(params: SignInParams): Promise<SignInResult> {
 }
 
 export async function createNewAdmin(params: BodyAdmin) {
-  const admin = await adminRepository.findByEmail(params.email);
-  if (admin) throw invalidCredentialsError();
+  const adminEmail = await adminRepository.findByEmail(params.email);
+  if (adminEmail) throw duplicatedEmailError();
+
+  const adminCpf = await adminRepository.findByCpf(params.cpf);
+  if (adminCpf) throw duplicatedCPFError();
 
   const hashedPassword = await bcrypt.hash(params.password, 12);
-  console.log("Params Service", params);
+
   const newAdmin = await adminRepository.createNewadmin({ ...params, password: hashedPassword });
-  console.log("newAdmin saida Service", newAdmin);
+
   return newAdmin;
 }
 
