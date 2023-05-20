@@ -26,7 +26,7 @@ async function signInGoogle(params: SignInGoogleParams): Promise<SignInResult> {
   const { accessToken } = params;
   let name, email, birthday, user;
   let testdata;
-  
+
   try {
     const url = `https://people.googleapis.com/v1/people/me?key=${process.env.GOOGLE_API_KEY}&personFields=names,emailAddresses,birthdays,phoneNumbers,`;
     const headers = { Authorization: `Bearer ${accessToken}` };
@@ -49,6 +49,34 @@ async function signInGoogle(params: SignInGoogleParams): Promise<SignInResult> {
   }
 
   const token = await createSession(user.id);
+
+  return {
+    user: { id: user.id, email: user.email },
+    token,
+  };
+}
+
+async function signInFacebook({ accessToken: userToken }: SignInGoogleParams): Promise<SignInResult> {
+  const app_id = process.env.FACEBOOK_APP_ID;
+  const app_secret = process.env.FACEBOOK_APP_SECRET;
+  const access_token = `${app_id}|${app_secret}`;
+  let user, token;
+  try {
+    const validateToken = await axios.get(
+      `https://graph.facebook.com/debug_token?input_token=${userToken}&access_token=${access_token}`,
+    );
+    if (!validateToken.data.data.is_valid) throw invalidGoogleCredentialError();
+    const {
+      data: { email: userEmail },
+    } = await axios.get(`https://graph.facebook.com/me?fields=email&access_token=${userToken}`);
+
+    user = await getUserOrFail(userEmail);
+
+    token = await createSession(user.id);
+  } catch (err) {
+    err.status = 404;
+    throw err;
+  }
 
   return {
     user: { id: user.id, email: user.email },
@@ -90,6 +118,7 @@ type GetUserOrFailResult = Pick<User, "id" | "email" | "password">;
 export const authenticationService = {
   signIn,
   signInGoogle,
+  signInFacebook,
 };
 
 export * from "./errors";
