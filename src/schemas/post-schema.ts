@@ -31,3 +31,14 @@ export const postFilterSchema = Joi.object({
   }),
   inputFilterValue: Joi.string().allow("").required(),
 });
+
+// Comment ==
+
+export const postCommentSchema = Joi.object<{ postId: number, text: string }>({
+  postId: Joi.number().required(),
+  text: Joi.string().required()
+});
+
+export const commentIdSchema = Joi.object<{ commentId: number }>({
+  commentId: Joi.number().required(),
+});

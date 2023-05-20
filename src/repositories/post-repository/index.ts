@@ -1,6 +1,6 @@
 import { createPrismaTopicFilter } from "../../utils/prisma-utils";
 import { prisma } from "../../config";
-import { likes, posts } from "@prisma/client";
+import { likes, posts, postsComments } from "@prisma/client";
 
 async function insert(data: PostParams): Promise<void> {
   await prisma.posts.create({
@@ -174,6 +174,46 @@ function upsertRecentPost(postId: number, userId: number, recentId: string = "ad
   });
 }
 
+// Comments ==
+
+async function findComment(id: number): Promise<postsComments> {
+  return await prisma.postsComments.findUnique({
+    where: { id }
+  });
+}
+
+async function findManyComments(postId: number): Promise<any> {
+  return await prisma.postsComments.findMany({
+    where: { postId },
+    select: {
+      id: true,
+      text: true,
+      createdAt: true,
+      users: {
+        select: {
+          id: true,
+          name: true
+        }
+      }
+    },
+    orderBy: {
+      createdAt: "desc"
+    }
+  });
+}
+
+async function insertComment(data: CommentParams): Promise<void> {
+  await prisma.postsComments.create({ data });
+}
+
+async function deleteComment(id: number): Promise<void> {
+  await prisma.postsComments.delete({
+    where: { id }
+  });
+}
+
+// Types ==
+
 export type TopicIdFilter = {
   topicId: number[];
 };
@@ -185,6 +225,10 @@ export type orderByFilter = {
 export type GetPost = Omit<PostParams, "adminId" | "topicId"> & { admins: { name: string; photo: string } };
 
 export type PostParams = Omit<posts, "id" | "updated_at">;
+
+export type CommentParams = Pick<postsComments, "userId" | "postId" | "text">;
+
+// Export ==
 
 const postRepository = {
   insert,
@@ -198,6 +242,10 @@ const postRepository = {
   findManyForNormalSearch,
   getUserRecentPost,
   upsertRecentPost,
+  findComment,
+  findManyComments,
+  insertComment,
+  deleteComment
 };
 
 export default postRepository;
