@@ -56,7 +56,7 @@ async function signInGoogle(params: SignInGoogleParams): Promise<SignInResult> {
   };
 }
 
-async function signInFacebook({ accessToken: userToken }: SignInGoogleParams): Promise<SignInResult> {
+async function signInFacebook({ accessToken: userToken }: SignInGoogleParams): Promise<SignInFacebookResult> {
   const app_id = process.env.FACEBOOK_APP_ID;
   const app_secret = process.env.FACEBOOK_APP_SECRET;
   const access_token = `${app_id}|${app_secret}`;
@@ -112,6 +112,11 @@ type SignInResult = {
   user: Pick<User, "id" | "name" | "email">;
   token: string;
 };
+
+type SignInFacebookResult = {
+  user: Pick<User, "id" | "email">;
+  token: string;
+}
 
 type GetUserOrFailResult = Pick<User, "id" | "name" | "email" | "password">;
 
