@@ -25,7 +25,7 @@ export async function singInAdmin(params: SignInParams): Promise<SignInResult> {
   };
 }
 
-export async function createNewAdmin(params: BodyAdmin) {
+export async function createNewAdmin(params: BodyAdmin): Promise<admins> {
   const adminEmail = await adminRepository.findByEmail(params.email);
   if (adminEmail) throw duplicatedEmailError();
 
