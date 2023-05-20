@@ -22,6 +22,7 @@ import {
   donateRouter,
   topicsRouter,
   volunteerRouter,
+  adminRouter,
 } from "./routers";
 
 const app = express();
@@ -29,10 +30,11 @@ app
   .use(cors())
   .use(express.json())
   .use(express.static("public"))
-  .get('/', (_req, res) => {
-    res.sendFile('index.html', {"root": '../public'});
+  .get("/", (_req, res) => {
+    res.sendFile("index.html", { "root": "../public" });
   })
   .use("/users", usersRouter)
+  .use("/admin", adminRouter)
   .use("/auth", authenticationRouter)
   .use("/news-letter", newsLetterRouter)
   .use("/contact", contactRouter)
