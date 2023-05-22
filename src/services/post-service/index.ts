@@ -85,7 +85,7 @@ export async function getManyFilteredSuggestions(
   userId?: number,
 ) {
   const MAX_LIMIT = 6;
-  let posts: PostsFilter[];
+  let posts: PostsFilter[] = [];
   if (userId) {
     const recentlySearchedArray = await postRepository.findManyForSearchLastSearched(
       inputFilterValue,
@@ -107,6 +107,7 @@ export async function getManyFilteredSuggestions(
 
   const parseNewPosts: PostsFilter[] = newPosts.map((post) => ({ ...post, type: "new" }));
   posts = [...posts, ...parseNewPosts];
+
   if (posts.length === 0) throw notFoundError();
 
   return posts;
