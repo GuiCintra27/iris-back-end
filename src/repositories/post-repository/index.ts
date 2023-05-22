@@ -43,33 +43,27 @@ async function findManyByFilters(
   });
 }
 
-function findManyForSearchLastVisited(
-  topicIdsFilters: TopicIdFilter,
-  inputValueFilter: string,
-  MAX_LIMIT: number,
-  userId: number,
-) {
-  const filter = createPrismaTopicFilter(topicIdsFilters, inputValueFilter);
-
-  filter.where.AND = {
-    ...filter.where.AND,
-    recentlyVisited: {
-      some: {
-        userId: {
+function findManyForSearchLastSearched(inputValueFilter: string, MAX_LIMIT: number, userId: number) {
+  return prisma.recentlySearchedByUser.findMany({
+    where: {
+      AND: {
+        recentlySearched: {
+          value: {
+            contains: inputValueFilter,
+          },
+        },
+        usersId: {
           equals: userId,
         },
       },
     },
-  };
-
-  return prisma.posts.findMany({
-    ...filter,
-    orderBy: {
-      updated_at: "desc",
-    },
     select: {
-      id: true,
-      title: true,
+      recentlySearched: {
+        select: {
+          id: true,
+          value: true,
+        },
+      },
     },
     take: MAX_LIMIT,
   });
@@ -79,20 +73,8 @@ function findManyForNormalSearch(
   topicIdsFilters: TopicIdFilter,
   inputValueFilter: string,
   take: number,
-  userId: number,
 ) {
   const filter = createPrismaTopicFilter(topicIdsFilters, inputValueFilter);
-
-  filter.where.AND = {
-    ...filter.where.AND,
-    recentlyVisited: {
-      every: {
-        userId: {
-          not: userId,
-        },
-      },
-    },
-  };
 
   return prisma.posts.findMany({
     ...filter,
@@ -153,23 +135,49 @@ async function findLike(postId: number, userId: number): Promise<likes> {
   });
 }
 
-function getUserRecentPost(postId: number, userId: number) {
-  return prisma.recentlyVisited.findFirst({
+function getIdOfRecentlySearchedByUser(searchValue: string, userId: number) {
+  return prisma.recentlySearchedByUser.findFirst({
     where: {
-      AND: { userId: { equals: userId }, postId: { equals: postId } },
+      AND: {
+        recentlySearched: { value: searchValue },
+        users: { id: userId },
+      },
+    },
+    select: {
+      id: true,
     },
   });
 }
 
-function upsertRecentPost(postId: number, userId: number, recentId: string = "add") {
-  return prisma.recentlyVisited.upsert({
-    where: { id: recentId },
+function getRecentlySearchId(searchValue: string) {
+  return prisma.recentlySearched.findFirst({
+    where: {
+      value: searchValue,
+    },
+    select: {
+      id: true,
+    },
+  });
+}
+function createRecentlySearchId(searchValue: string) {
+  return prisma.recentlySearched.create({
+    data: {
+      value: searchValue,
+    },
+  });
+}
+
+function upsertRecentSearch(recentSearchId: string, userId: number, recentId: string = "new") {
+  return prisma.recentlySearchedByUser.upsert({
+    where: {
+      id: recentId,
+    },
     update: {
       updatedAt: new Date(),
     },
     create: {
-      postId,
-      userId,
+      usersId: userId,
+      recentlySearchedId: recentSearchId,
     },
   });
 }
@@ -238,10 +246,12 @@ const postRepository = {
   deleteLikes,
   findLike,
   findManyLikes,
-  findManyForSearchLastVisited,
+  findManyForSearchLastSearched,
   findManyForNormalSearch,
-  getUserRecentPost,
-  upsertRecentPost,
+  getIdOfRecentlySearchedByUser,
+  upsertRecentSearch,
+  getRecentlySearchId,
+  createRecentlySearchId,
   findComment,
   findManyComments,
   insertComment,
