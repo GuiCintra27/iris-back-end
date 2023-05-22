@@ -4,8 +4,9 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider          = "postgresql"
+  url               = env("DATABASE_URL")
+  shadowDatabaseUrl = env("SHADOW_DATABASE_URL")
 }
 
 model admin_sessions {
@@ -79,18 +80,19 @@ model offices {
 }
 
 model posts {
-  id         Int      @id(map: "posts_pk") @default(autoincrement())
-  adminId    Int
-  topicId    Int
-  title      String
-  text       String
-  image      String
-  postCover  String
-  created_at DateTime @default(now())
-  updated_at DateTime @updatedAt
-  admins     admins   @relation(fields: [adminId], references: [id], onDelete: Cascade, onUpdate: Cascade, map: "posts_fk0")
-  topics     topics   @relation(fields: [topicId], references: [id], onDelete: Cascade, onUpdate: Cascade, map: "topics_fk0")
-  likes      likes[]
+  id            Int             @id(map: "posts_pk") @default(autoincrement())
+  adminId       Int
+  topicId       Int
+  title         String
+  text          String
+  image         String
+  postCover     String
+  created_at    DateTime        @default(now())
+  updated_at    DateTime        @updatedAt
+  admins        admins          @relation(fields: [adminId], references: [id], onDelete: Cascade, onUpdate: Cascade, map: "posts_fk0")
+  topics        topics          @relation(fields: [topicId], references: [id], onDelete: Cascade, onUpdate: Cascade, map: "topics_fk0")
+  likes         likes[]
+  postsComments postsComments[]
 
   @@index([id])
 }
@@ -149,6 +151,7 @@ model users {
   volunteers             volunteers[]
   likes                  likes[]
   recentlySearchedByUser recentlySearchedByUser[]
+  postsComments          postsComments[]
 
   @@index([email])
 }
@@ -203,4 +206,15 @@ model recentlySearched {
   id                     String                   @id @default(uuid())
   value                  String
   recentlySearchedByUser recentlySearchedByUser[]
+}
+
+model postsComments {
+  id        Int      @id @default(autoincrement())
+  postId    Int
+  userId    Int
+  text      String
+  createdAt DateTime @default(now()) @db.Timestamp(6)
+  updatedAt DateTime @default(now()) @db.Timestamp(6)
+  posts     posts    @relation(fields: [postId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  users     users    @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 }

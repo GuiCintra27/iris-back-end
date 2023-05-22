@@ -17,7 +17,7 @@ async function signIn(params: SignInParams): Promise<SignInResult> {
   const token = await createSession(user.id);
 
   return {
-    user: { id: user.id, email: user.email },
+    user: { id: user.id, name: user.name, email: user.email },
     token,
   };
 }
@@ -51,12 +51,12 @@ async function signInGoogle(params: SignInGoogleParams): Promise<SignInResult> {
   const token = await createSession(user.id);
 
   return {
-    user: { id: user.id, email: user.email },
+    user: { id: user.id, name: user.name, email: user.email },
     token,
   };
 }
 
-async function signInFacebook({ accessToken: userToken }: SignInGoogleParams): Promise<SignInResult> {
+async function signInFacebook({ accessToken: userToken }: SignInGoogleParams): Promise<SignInFacebookResult> {
   const app_id = process.env.FACEBOOK_APP_ID;
   const app_secret = process.env.FACEBOOK_APP_SECRET;
   const access_token = `${app_id}|${app_secret}`;
@@ -85,7 +85,7 @@ async function signInFacebook({ accessToken: userToken }: SignInGoogleParams): P
 }
 
 async function getUserOrFail(email: string): Promise<GetUserOrFailResult> {
-  const user = await userRepository.findByEmail(email, { id: true, email: true, password: true });
+  const user = await userRepository.findByEmail(email, { id: true, name: true, email: true, password: true });
   if (!user) throw invalidCredentialsError();
 
   return user;
@@ -109,11 +109,16 @@ async function validatePasswordOrFail(password: string, userPassword: string) {
 export type SignInParams = Pick<User, "email" | "password">;
 
 type SignInResult = {
-  user: Pick<User, "id" | "email">;
+  user: Pick<User, "id" | "name" | "email">;
   token: string;
 };
 
-type GetUserOrFailResult = Pick<User, "id" | "email" | "password">;
+type SignInFacebookResult = {
+  user: Pick<User, "id" | "email">;
+  token: string;
+}
+
+type GetUserOrFailResult = Pick<User, "id" | "name" | "email" | "password">;
 
 export const authenticationService = {
   signIn,

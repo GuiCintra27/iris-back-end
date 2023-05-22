@@ -12,5 +12,3 @@ ALTER TABLE "recentlyVisited" DROP CONSTRAINT "recentlyVisited_postId_fkey";
 ALTER TABLE "recentlyVisited" DROP COLUMN "postId",
 ADD COLUMN     "value" TEXT NOT NULL;
 
--- CreateIndex
-CREATE INDEX "posts_id_idx" ON "posts"("id");

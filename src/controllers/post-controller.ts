@@ -120,3 +120,42 @@ export async function upsertRecentPost(req: AuthenticatedRequest, res: Response)
     return res.sendStatus(httpStatus.INTERNAL_SERVER_ERROR);
   }
 }
+
+// Comments ===
+
+export async function getComments(req: Request, res: Response) {
+  const { postId } = req.params;
+
+  try {
+    const comments = await postService.getComments(+postId);
+    return res.send(comments);
+  } catch (error) {
+    return res.sendStatus(httpStatus.INTERNAL_SERVER_ERROR);
+  }
+}
+
+export async function postComment(req: AuthenticatedRequest, res: Response) {
+  const { userId } = req;
+  const { postId, text } = req.body;
+
+  try {
+    await postService.createComment(userId, +postId, text);
+    return res.sendStatus(httpStatus.CREATED);
+  } catch (error) {
+    if (error.name === "NotFoundError") return res.status(httpStatus.NOT_FOUND).send(error);
+    return res.sendStatus(httpStatus.INTERNAL_SERVER_ERROR);
+  }
+}
+
+export async function deleteComment(req: AuthenticatedRequest, res: Response) {
+  const { userId } = req;
+  const { commentId } = req.params;
+
+  try {
+    await postService.excludeComment(userId, +commentId);
+    return res.sendStatus(httpStatus.NO_CONTENT);
+  } catch (error) {
+    if (error.name === "NotFoundError") return res.status(httpStatus.NOT_FOUND).send(error);
+    return res.sendStatus(httpStatus.INTERNAL_SERVER_ERROR);
+  }
+}
