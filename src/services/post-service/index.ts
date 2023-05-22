@@ -102,15 +102,11 @@ export async function getManyFilteredSuggestions(
   }
 
   const quantityToTake = MAX_LIMIT - posts.length;
-  const newPosts = await postRepository.findManyForNormalSearch(
-    topicIdFilter,
-    inputFilterValue,
-    quantityToTake,
-    userId,
-  );
+
+  const newPosts = await postRepository.findManyForNormalSearch(topicIdFilter, inputFilterValue, quantityToTake);
+
   const parseNewPosts: PostsFilter[] = newPosts.map((post) => ({ ...post, type: "new" }));
   posts = [...posts, ...parseNewPosts];
-
   if (posts.length === 0) throw notFoundError();
 
   return posts;

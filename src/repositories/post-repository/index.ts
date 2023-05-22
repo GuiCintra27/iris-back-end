@@ -73,20 +73,8 @@ function findManyForNormalSearch(
   topicIdsFilters: TopicIdFilter,
   inputValueFilter: string,
   take: number,
-  userId: number,
 ) {
   const filter = createPrismaTopicFilter(topicIdsFilters, inputValueFilter);
-
-  filter.where.AND = {
-    ...filter.where.AND,
-    recentlyVisited: {
-      every: {
-        userId: {
-          not: userId,
-        },
-      },
-    },
-  };
 
   return prisma.posts.findMany({
     ...filter,
