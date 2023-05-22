@@ -70,7 +70,6 @@ export async function getSearchFilteredSuggestions(req: AuthenticatedRequest, re
   const topicFilter = topicFilterIds as TopicIdFilter;
   try {
     const filteredPosts = await postService.getManyFilteredSuggestions(topicFilter, inputFilterValue, userId);
-    console.log(userId);
 
     return res.status(httpStatus.OK).send(filteredPosts);
   } catch (error) {
