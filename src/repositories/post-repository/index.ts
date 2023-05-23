@@ -101,6 +101,20 @@ async function findById(id: number): Promise<posts> {
   });
 }
 
+async function findByTopicId(postId: number, topicId: number): Promise<posts[]> {
+  return await prisma.posts.findMany({
+    where: {
+      topicId,
+      NOT: {
+        id: postId
+      }
+    },
+    include: {
+      topics: true,
+    },
+  });
+}
+
 async function findManyLikes(postId: number): Promise<likes[]> {
   return await prisma.likes.findMany({
     where: {
@@ -241,6 +255,7 @@ export type CommentParams = Pick<postsComments, "userId" | "postId" | "text">;
 const postRepository = {
   insert,
   findById,
+  findByTopicId,
   findManyByFilters,
   addLikes,
   deleteLikes,

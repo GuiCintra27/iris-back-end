@@ -29,6 +29,9 @@ describe("GET /posts", () => {
         topicFilterIds: {
           topicId: []
         },
+        postOrder: {
+          id: "desc"
+        },
         inputFilterValue: ""
       }
     );
@@ -45,6 +48,9 @@ describe("GET /posts", () => {
       {
         topicFilterIds: {
           topicId: []
+        },
+        postOrder: {
+          id: "desc"
         },
         inputFilterValue: ""
       }

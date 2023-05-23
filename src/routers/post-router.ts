@@ -6,6 +6,7 @@ import {
   getFilteredPosts,
   getLikesByPostId,
   getPostsById,
+  getPostsByTopicId,
   getSearchFilteredSuggestions,
   incrementLikes,
   postComment,
@@ -34,6 +35,7 @@ const postRouter = Router();
 
 postRouter
   .get("/:postId", getPostsById)
+  .get("/list/suggestions", getPostsByTopicId)
   .get("/likes/:postId", getLikesByPostId)
   .get("/comments/:postId", getComments)
   .post("/filter", validateBody(postFilterSchema), getFilteredPosts)
