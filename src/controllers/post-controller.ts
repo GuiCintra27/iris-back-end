@@ -4,6 +4,7 @@ import httpStatus from "http-status";
 import { AuthenticatedRequest } from "../middlewares";
 import { AdminAuthenticatedRequest } from "../middlewares/admin-authentication-middleware";
 import { orderByFilter, TopicIdFilter } from "../repositories/post-repository";
+import { createPrismaTopicFilter } from "@/utils/prisma-utils";
 
 export async function createPost(req: AdminAuthenticatedRequest, res: Response) {
   const { adminId } = req;
@@ -79,6 +80,7 @@ export async function getFilteredPosts(req: Request, res: Response) {
 export async function getSearchFilteredSuggestions(req: AuthenticatedRequest, res: Response) {
   const { topicFilterIds, inputFilterValue } = req.body;
   const { userId } = req;
+
   const topicFilter = topicFilterIds as TopicIdFilter;
   try {
     const filteredPosts = await postService.getManyFilteredSuggestions(topicFilter, inputFilterValue, userId);
@@ -120,11 +122,11 @@ export async function decreaseLikes(req: AuthenticatedRequest, res: Response) {
   }
 }
 export async function upsertRecentPost(req: AuthenticatedRequest, res: Response) {
-  const { postId } = req.body;
+  const { inputValue } = req.body;
   const { userId } = req;
 
   try {
-    await postService.upsertRecentPost(Number(postId), userId);
+    await postService.upsertRecentSearch(inputValue, userId);
     return res.sendStatus(httpStatus.OK);
   } catch (error) {
     if (error.name === "NotFoundError") return res.status(httpStatus.NOT_FOUND).send(error);

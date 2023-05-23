@@ -4,8 +4,8 @@
   "description": "",
   "main": "dist/index.js",
   "scripts": {
-    "build": "tsc -p tsconfig.build.json",
-    "start": "npm run build && npm run migration:generate && npm run prisma:migrate:deploy && npm run dev:seed && node dist/server.js",
+    "build": "npm install && tsc -p tsconfig.build.json && npm run prisma:migrate:deploy && npm run dev:seed",
+    "start": "node dist/server.js",
     "migration:run": "prisma migrate deploy",
     "migration:generate": "npm run dev:load-envs prisma migrate dev",
     "lint": "eslint .",

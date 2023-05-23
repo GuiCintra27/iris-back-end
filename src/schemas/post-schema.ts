@@ -17,6 +17,10 @@ export const postIdSchema = Joi.object<{ postId: number }>({
   postId: Joi.number().required(),
 });
 
+export const recentSearchSchema = Joi.object<{ inputValue: string }>({
+  inputValue: Joi.string().required(),
+});
+
 export const postSuggestionSchema = Joi.object({
   inputFilterValue: Joi.string().required(),
   topicFilterIdsArray: Joi.array().items(Joi.number()).required(),
@@ -27,7 +31,7 @@ export const postFilterSchema = Joi.object({
     topicId: Joi.array().items(Joi.number()).required(),
   }).required(),
   postOrder: Joi.object({
-    id: Joi.string().required()
+    id: Joi.string().required(),
   }),
   inputFilterValue: Joi.string().allow("").required(),
 });

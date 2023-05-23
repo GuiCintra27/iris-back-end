@@ -19,7 +19,6 @@ export async function authenticateToken(req: AuthenticatedRequest, res: Response
 export async function optionalAuthenticateToken(req: AuthenticatedRequest, res: Response, next: NextFunction) {
   try {
     const userId = await checkSessionAndToken(req);
-
     req.userId = userId;
   } catch (err) {
   } finally {

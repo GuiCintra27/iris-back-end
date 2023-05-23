@@ -10,6 +10,7 @@ import {
   topics,
 } from "@prisma/client";
 import { textOne, textTwo } from "./blogTexts";
+import bcrypt from "bcrypt";
 const prisma = new PrismaClient();
 
 async function main() {
@@ -114,6 +115,7 @@ async function main() {
   }
 
   if (!admin) {
+    const adminHash = await bcrypt.hash("123456789", 12);
     admin = await prisma.admins.create({
       data: {
         cpf: "15789465784",
@@ -121,7 +123,7 @@ async function main() {
         name: "Cintra",
         photo: "https://i.picasion.com/pic92/5b62d3850d659c5e4917c29d9f35525a.gif",
         birthDay: new Date("2000-01-01"),
-        password: "123456789",
+        password: adminHash,
       },
     });
 
@@ -149,7 +151,7 @@ async function main() {
         topicId: findTopics[Math.floor(Math.random() * findTopics.length)].id,
         text: postsTexts[Math.floor(Math.random() * postsTexts.length)],
         image: images[Math.floor(Math.random() * images.length)],
-        postCover: images[Math.floor(Math.random() * images.length)]
+        postCover: images[Math.floor(Math.random() * images.length)],
       };
     });
 
