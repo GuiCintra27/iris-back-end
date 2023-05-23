@@ -6,19 +6,21 @@ import {
   getFilteredPosts,
   getLikesByPostId,
   getPostsById,
+  getPostsByTopicId,
   getSearchFilteredSuggestions,
   incrementLikes,
   postComment,
   upsertRecentPost,
 } from "../controllers";
 import { adminAuthenticateToken, authenticateToken, optionalAuthenticateToken, validateBody, validateParams } from "../middlewares";
-import { commentIdSchema, createPostSchema, postCommentSchema, postFilterSchema, postIdSchema, postSuggestionSchema, updateLikeSchema } from "../schemas";
+import { createPostSchema, postCommentSchema, postFilterSchema, postIdSchema, updateLikeSchema } from "../schemas";
 import { Router } from "express";
 
 const postRouter = Router();
 
 postRouter
   .get("/:postId", getPostsById)
+  .get("/list/suggestions", getPostsByTopicId)
   .get("/likes/:postId", getLikesByPostId)
   .get("/comments/:postId", getComments)
   .post("/filter", validateBody(postFilterSchema), getFilteredPosts)

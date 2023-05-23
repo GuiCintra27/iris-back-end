@@ -31,6 +31,20 @@ export async function getPostsById(req: Request, res: Response) {
   }
 }
 
+export async function getPostsByTopicId(req: Request, res: Response) {
+  const { topicId, postId } = req.query;
+
+  try {
+    const posts = await postService.findByTopic(Number(topicId), Number(postId));
+
+    return res.status(httpStatus.OK).send(posts);
+  } catch (error) {
+    if (error.name === "NotFoundError") return res.status(httpStatus.NOT_FOUND).send(error);
+    console.log(error);
+    return res.sendStatus(httpStatus.INTERNAL_SERVER_ERROR);
+  }
+}
+
 export async function getLikesByPostId(req: Request, res: Response) {
   const { postId } = req.params;
 

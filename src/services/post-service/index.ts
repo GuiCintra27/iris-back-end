@@ -17,6 +17,15 @@ export async function getPosts(postId: number): Promise<posts> {
   return post;
 }
 
+export async function findByTopic(topicId: number, postId: number): Promise<posts[]> {
+  const posts = await postRepository.findByTopicId(postId, topicId);
+  if (posts.length === 0) throw notFoundError();
+
+  const mixedPosts = posts.sort(() => Math.random() - 0.5);
+
+  return mixedPosts.slice(0, 4);
+}
+
 export async function getLikes(postId: number): Promise<likes[]> {
   const likes = await postRepository.findManyLikes(postId);
   if (!likes) throw notFoundError();
@@ -137,6 +146,7 @@ export async function excludeComment(userId: number, commentId: number): Promise
 const postService = {
   createPost,
   getPosts,
+  findByTopic,
   updateLikes,
   getManyFilteredPosts,
   excludeLikes,
