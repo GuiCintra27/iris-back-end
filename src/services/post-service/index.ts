@@ -1,7 +1,7 @@
 import postRepository, { GetPost, TopicIdFilter, PostParams, orderByFilter } from "../../repositories/post-repository";
 import userRepository from "../../repositories/user-repository";
 import { likes, posts, postsComments } from "@prisma/client";
-import { notFoundError } from "../../errors";
+import { notFoundError, unauthorizedError } from "../../errors";
 import { PostsFilter } from "../../utils/prisma-utils";
 
 export async function createPost(postData: PostParams): Promise<void> {
@@ -52,7 +52,7 @@ export async function updateLikes(postId: number, userId: number): Promise<void>
   if (!post) throw notFoundError();
 
   const user = await userRepository.findById(userId);
-  if (!user) throw notFoundError();
+  if (!user) throw unauthorizedError();
 
   await postRepository.addLikes(postId, userId);
 

@@ -102,6 +102,7 @@ export async function incrementLikes(req: AuthenticatedRequest, res: Response) {
     return res.sendStatus(httpStatus.CREATED);
   } catch (error) {
     if (error.name === "NotFoundError") return res.status(httpStatus.NOT_FOUND).send(error);
+    if (error.name === "UnauthorizedError") return res.status(httpStatus.UNAUTHORIZED).send(error);
 
     return res.sendStatus(httpStatus.INTERNAL_SERVER_ERROR);
   }
