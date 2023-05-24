@@ -9,7 +9,7 @@ import {
   skincolor,
   topics,
 } from "@prisma/client";
-import { textOne, textTwo } from "./blogTexts";
+import { textOne } from "./blogTexts";
 import bcrypt from "bcrypt";
 const prisma = new PrismaClient();
 
@@ -120,6 +120,17 @@ async function main() {
       data: {
         cpf: "15789465784",
         email: "admin@gmail.com",
+        name: "Luís Guilherme",
+        photo: "https://i.imgur.com/8m2ejbL.png",
+        birthDay: new Date("2000-01-01"),
+        password: adminHash,
+      },
+    });
+
+    await prisma.admins.create({
+      data: {
+        cpf: "15789467784",
+        email: "admina@gmail.com",
         name: "Cintra",
         photo: "https://i.picasion.com/pic92/5b62d3850d659c5e4917c29d9f35525a.gif",
         birthDay: new Date("2000-01-01"),
@@ -137,26 +148,16 @@ async function main() {
 
   if (posts.length < 5) {
     await prisma.posts.deleteMany();
-    const findTopics = await prisma.topics.findMany({});
-
-    const postsTexts = [textOne, textTwo];
-    const postsQuantity = 15;
-    const images = ["https://i.imgur.com/YFby08q.png", "https://i.imgur.com/u4Kc3Lu.png"];
-    const postCovers = ["https://i.imgur.com/YFby08q.png", "https://i.imgur.com/u4Kc3Lu.png"];
-
-    const postsData: posts[] = Array.apply(null, new Array(postsQuantity)).map((el: null, ind: number) => {
-      return {
-        adminId: admin?.id,
-        title: `Título ${ind + 1}`,
-        topicId: findTopics[Math.floor(Math.random() * findTopics.length)].id,
-        text: postsTexts[Math.floor(Math.random() * postsTexts.length)],
-        image: images[Math.floor(Math.random() * images.length)],
-        postCover: images[Math.floor(Math.random() * images.length)],
-      };
-    });
 
     posts = await prisma.posts.createMany({
-      data: postsData,
+      data: {
+        adminId: admin?.id,
+        title: "Young Royals: muito mais do que um romance LGBTQIA+ para adolescentes",
+        topicId: 4,
+        text: textOne,
+        image: "https://i.imgur.com/rZXiMOP.png",
+        postCover: "https://i.imgur.com/kWu63Np.png",
+      },
     });
   }
 

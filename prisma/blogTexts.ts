@@ -1,40 +1,14 @@
-export const textOne = `A forma de transmissão mais comum do vírus HIV, causador da AIDS, é por meio de relações sexuais sem proteção entre um portador do vírus e uma pessoa soronegativa. 
+export const textOne = `Se você está lendo esse post e não tem ideia do que seja Young Royals, chegou a hora de se atualizar. A produção sueca e original da Netflix tem conquistado o coração de adolescentes ao redor de todo o mundo e, principalmente, corações brasileiros.
 
-            Mas, vocês sabiam que em alguns casos o portador do vírus sabe sobre a sua sorologia e escolhe infectar o parceiro(a) intencionalmente sem o conhecimento dele(a)?
+Os motivos pelos quais a série está fazendo sucesso ficam óbvios no desenvolver do romance entre Simon — jovem de origem humilde — e Wilhelm, príncipe herdeiro da Suécia que é obrigado a se mudar para um internato, onde conhece Simon. O desenrolar disso tudo você já pode imaginar, né? Por isso, hoje queremos propor uma reflexão sobre a representatividade presente para além da comunidade LGBTQIA+.
 
-            “Carimbar” é a gíria utilizada por membros do chamado “Grupo do Carimbo”, para descrever o ato de transmitir o vírus do HIV intencionalmente para pessoas que não tem conhecimento do estado soropositivo dos membros. A transmissão proposital de um vírus fatal como o HIV configura os crimes de lesão corporal gravíssima, contágio de moléstia grave e exposição da saúde ou vida de outro a perigo iminente, todos previstos no código penal brasileiro.
+Wilhelm entra num processo de autoconhecimento ao se mudar de escola, reconhecendo partes de si mesmo que nunca tinha notado. A produção aborda de forma muito real o processo de descobrimento e enfrentamento de questões e pensamentos que o invisibilizavam como jovem LGBTQIA+. Antes que os outros nos invisibilizem, sempre somos nós os primeiros a duvidar de nossas sexualidades e identidades. Com Wilhelm não foi diferente; até porque, onde já se viu um príncipe herdeiro não ser hétero?
 
-            O contágio pode acontecer de várias formas, alguns membros do grupo afirmam tirar a camisinha durante o ato sexual sem o conhecimento do parceiro(a) e, em outros casos, rasgar ou cortar o preservativo propositalmente antes da relação.
+Young Royals é, definitivamente, uma série real. Os personagens — héteros ou não — são adolescentes e agem como tal; não possuem corpos e rostos perfeitos, mostrando suas manchas, espinhas, rugas e dentes amarelos ao longo dos episódios. É raro encontrar séries adolescentes que não tenham representatividades vazias, com atores de 25 anos interpretando personagens de 16. Na trama, as imperfeições são apontadas e não há problema nenhum nisso.
 
-            “Carimbar” é a gíria utilizada por membros do chamado “Grupo do Carimbo”, para descrever o ato de transmitir o vírus do HIV intencionalmente para pessoas que não tem conhecimento do estado soropositivo dos membros. A transmissão proposital de um vírus fatal como o HIV configura os crimes de lesão corporal gravíssima, contágio de moléstia grave e exposição da saúde ou vida de outro a perigo iminente, todos previstos no código penal brasileiro.
+O romance de Simon e Wilhelm toca todos os que assistem porque realmente parece de verdade. Não há hipersexualização e, ao mesmo tempo, não há puritanismo. Há o que sempre existe: jovens se descobrindo juntos e enfrentando problemas que todo LGBTQIA+ enfrenta. A insegurança e o medo em demonstrar o mínimo de afeto persegue todos da nossa comunidade, e todos os sentimentos são ainda mais experenciados quando você é da realeza monárquica e se apaixona por um garoto que mora no bairro mais pobre da cidade.
 
-            O contágio pode acontecer de várias formas, alguns membros do grupo afirmam tirar a camisinha durante o ato sexual sem o conhecimento do parceiro(a) e, em outros casos, rasgar ou cortar o preservativo propositalmente antes da relação.
+Personagens como Felice possuem corpos reais, fora do padrão de beleza inalcançável. Além disso, Sara e seu TDAH não são representados de forma a gerar ainda mais estereótipos e problematizações capacitistas. A realidade por trás de corpos e/ou deficiências reais faz com que os espectadores não se comparem ou se menosprezem, pois conseguem se enxergar ali dentro. Felice, como mulher preta, não é retratada como a personagem forte que deve lutar contra o racismo; Sara, por sua vez, não passa a série toda sofrendo capacitismo e precisando de ajuda alheia para conseguir realizar suas atividades.
 
-            Desde sua descoberta na década de 80, a AIDS, tirou 34,7 milhões de vidas, muitas delas pertencentes à comunidade LGBTQIA +. A transmissão indiscriminada do vírus não é só crime, mas um desrespeito à vida e as muitas pessoas que vivem com vírus e tomam os devidos cuidados para proteger os que amam.
-
-            Atualmente 920 mil cidadãos brasileiros vivem com o vírus e somente 77% dessas pessoas têm acesso ao tratamento com antirretrovirais, que controlam os níveis virais no sangue, prevenindo a manifestação da AIDS.
-
-            A luta contra a AIDS é de todos, e é diaria, sexo seguro é um direito e deve ser a regra e não a excessão, independente da identidade de gênero, orientação sexual ou sexo biólogico.
-            Desde sua descoberta na década de 80, a AIDS, tirou 34,7 milhões de vidas, muitas delas pertencentes à comunidade LGBTQIA +. A transmissão indiscriminada do vírus não é só crime, mas um desrespeito à vida e as muitas pessoas que vivem com vírus e tomam os devidos cuidados para proteger os que amam.
-
-            Atualmente 920 mil cidadãos brasileiros vivem com o vírus e somente 77% dessas pessoas têm acesso ao tratamento com antirretrovirais, que controlam os níveis virais no sangue, prevenindo a manifestação da AIDS.
-
-            A luta contra a AIDS é de todos, e é diaria, sexo seguro é um direito e deve ser a regra e não a excessão, independente da identidade de gênero, orientação sexual ou sexo biólogico.`;
-
-export const textTwo = `Jovens sempre enfrentam situações em que suas vozes são silenciadas por justificativas sem sentido, sobre como ser jovem os torna incapazes de pensar por si mesmos. Os LGBTQIA+, além disso, muitas vezes são colocados como pessoas confusas, que estão apenas querendo chamar atenção. Sabemos o quão prejudicial isso é para a saúde mental dos jovens da nossa comunidade e podem ter certeza de que já acumulamos traumas demais no processo de aceitação.
-					
-						"Na minha época isso não existia!"
-					
-						Olha a fake news! A sexualidade humana sempre foi complexa, e toda sua diversidade já existe desde a antiguidade. É historicamente comprovado que, em muitas sociedades, possuir uma orientação sexual fora do padrão heteronormativo não era tido como algo ruim, como por exemplo na Grécia antiga e na Roma. Uma coisa é certa: a população LGBTQIA+, hoje, possui maior liberdade do que nos últimos séculos. É por isso que, antigamente, muitos se escondiam para sua própria proteção.
-					
-						"Isso é influência da mídia!"
-					
-						Muitas pessoas conservadoras atribuem a mídia como responsável por definir o desenvolvimento da sexualidade das crianças. É óbvio que é mentira! A sexualidade humana é definida biologicamente. Se a mídia influenciasse mesmo, não existiria nenhum LGBTQIA+, pois crescemos sem representatividade e, na maioria das vezes, com a imposição heteronormativa para as nossas ações. Se ver um beijo LGBTQIA+ te excita, talvez você precise experimentar coisas novas, rs.
-					
-						"Bissexualidade é uma jornada para se descobrir gay/lésbica!"
-					
-						Bora parar de generalizar? É claro que muitos jovens, em seus processos de descoberta, percebem que pertencem a outros rótulos, que antes não lhe despertavam o senso de pertencimento. Numa sociedade ideal os rótulos nem deveriam existir, então pra quê sair invisibilizando a comunidade bissexual achando que eles estão todos confusos? Se liga!
-					
-						"Tão gato, que desperdício!"
-					
-						Alguém avisa para as tiazonas que quem tá desperdiçando é elas, por perderem tempo achando que nós temos alguma coisa a ver com suas vidas amorosas? Desperdício para quem? Nós da comunidade não somos desperdício amores! A gente é humano como qualquer outro, uns estão na seca, outros pegando todo mundo, o que não falta é opção.`;
+É fato que Young Royals é uma série LGBTQIA+ feita para todos, não somente para o púbico LGBTQIA+. Fugindo dos padrões norte-americanos de produção, a série sueca tem adolescentes de verdade representando personagens que vivem problemas reais e que não são resumidos às suas minorias e vivências. Discutindo sobre a disputa de classes, a pressão da mídia, a busca por aceitação e fugindo de muitos estereótipos que poderiam ser reproduzidos, a produção teve muito respeito ao nos representar numa trama genuína, autêntica, envolvente e verdadeira.
+`;
