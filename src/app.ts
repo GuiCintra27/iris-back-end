@@ -33,6 +33,8 @@ app
   .get("/", (_req, res) => {
     res.sendFile("index.html", { "root": "../public" });
   })
+  .get("/health", (req, res) => res.send("OK"))
+
   .use("/users", usersRouter)
   .use("/admin", adminRouter)
   .use("/auth", authenticationRouter)
@@ -41,8 +43,7 @@ app
   .use("/posts", postRouter)
   .use("/donate", donateRouter)
   .use("/volunteer", volunteerRouter)
-  .use("/topics", topicsRouter)
-  .get("/health", (req, res) => res.send("OK"));
+  .use("/topics", topicsRouter);
 
 export function init(): Promise<Express> {
   connectDb();

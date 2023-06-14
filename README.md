@@ -1,18 +1,35 @@
-# iris-back
+# Íris API
 
-Back-end for Iniciativa Íris, an initiative that targets the lgbt community.
-
-:)
-
-## Link
+API for Iniciativa Íris.
 
 The website is available at: https://iniciativa-iris.vercel.app/
 
 ## About
 
-Iniciativa Íris is a web browser application with which you can be informed about Íris events, mentories, can donate to suport the initiative and volunteer to participate for the cause.
+This API serves the [iris-front-end](https://github.com/GuiCintra27/iris-front-end#iniciativa-%C3%ADris).\
+Below are the implemented features:
 
-## How to run for development
+- REST API
+- OAuth
+- Authenticated and unauthenticated routes
+- More than 150 tests
+
+## Technologies
+
+The following tools and frameworks were used in the construction of the project: <br/>
+
+<div style="display: inline_block"> 
+   <img align="center" alt="Gui-Ts" height="30" src="https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white">
+   <img align="center" alt="Gui-PostgreSQL" height="30" src="https://img.shields.io/badge/PostgreSQL-316192?style=for-the-badge&logo=postgresql&logoColor=white">
+   <img align="center" alt="Gui-NodeJs" height="30" src="https://img.shields.io/badge/Node.js-43853D?style=for-the-badge&logo=node.js&logoColor=white">
+   <img align="center" alt="Gui-ExpressJs" height="30" src="https://img.shields.io/badge/Express.js-404D59?style=for-the-badge">
+   <img align="center" alt="Gui-Jest" height="30" src="https://img.shields.io/badge/Jest-323330?style=for-the-badge&logo=Jest&logoColor=white">
+   <img align="center" alt="Gui-Git" height="30" src="https://img.shields.io/badge/GIT-E44C30?style=for-the-badge&logo=git&logoColor=white">
+   <img align="center" alt="Gui-Trello" height="30" src="https://img.shields.io/badge/Trello-0052CC?style=for-the-badge&logo=trello&logoColor=white">
+  <img align="center" alt="Gui-Notion" height="30" src="https://img.shields.io/badge/Notion-000000?style=for-the-badge&logo=notion&logoColor=white">
+</div>
+
+## How to run
 
 1. Clone this repository
 2. Install all dependencies
@@ -22,7 +39,7 @@ npm i
 ```
 
 3. Create a PostgreSQL database with whatever name you want
-4. Configure the `.env.development` file using the `.env.example` file (see "Running application locally or inside docker section" for details)
+4. Configure the `.env.development` file using the `.env.example`
 5. Run all migrations
 
 ```bash
@@ -35,102 +52,37 @@ npm run migration:run
 npm run dev:seed
 ```
 
-6. Run the back-end in a development environment:
+7. Run the back-end in a development environment:
 
 ```bash
 npm run dev
 ```
 
-## How to run tests
-
-1. Follow the steps in the last section
-1. Configure the `.env.test` file using the `.env.example` file (see "Running application locally or inside docker" section for details)
-1. Run all migrations
-
-```bash
-npm run migration:run
-```
-
-3. Run test:
-   (locally)
-
-```bash
-npm run test
-```
-
-(docker)
-
-```bash
-npm run test:docker
-```
-
-## Building and starting for production
+8. You can optionally build the project running
 
 ```bash
 npm run build
 npm start
 ```
 
-## Running migrations or generate prisma clients
+## How to run tests
 
-Before running migrations make sure you have a postgres db running based on `.env.development` or `.env.test` file for each environment. You can start a postgres instance by typing `npm run dev:postgres` or `npm run test:postgres`. The host name is the name of the postgres container inside docker-compose file if you are running the application inside a docker container or localhost if you are running it locally.
-
-You can operate on databases for different environments, but it is necessary to populate correct env variables for each environment first, so in order to perform db operations type the following commands:
-
-- `npm run dev:migration:run` - run migrations for development environment by loading envs from .env.development file. It uses [dotenv-cli](https://github.com/entropitor/dotenv-cli#readme) to load envs from .env.development file.
-- `npm run test:migration:run` - the same, but for test environment
-
-- `npm run dev:migration:generate -- --name ATOMIC_OPERATION_NAME` - generate and run migration and prisma client for development environment by loading envs from .env.development file. Replace `ATOMIC_OPERATION_NAME` by the name of the migration you want to generate.
-
-## Switching between environments
-
-In order to switch between development and test environments you need to shutdown the current postgres instance if it is running and start the new one.
-
-If you are in development environment:
+1. Follow the steps in the last section
+2. Configure the `.env.test` file using the `.env.example` file
+3. Run all migrations
 
 ```bash
-npm run dev:postgres:down
+npm run test:migration:run
 ```
 
-And then
+4. Seed the test database
 
 ```bash
-npm run test:postgres
+npm run test:seed
 ```
 
-If you are in test environment:
+5. Run test
 
 ```bash
-npm run test:postgres:down
+npm run test
 ```
-
-And then
-
-```bash
-npm run dev:postgres
-```
-
-## Running application locally or inside docker
-
-`.env.development` and `.env.test` must be changed if you and to run the application locally or inside docker. You can populate files based on `.env.example` file, but you need to consider the following:
-
-- Running application locally (postgres and node):
-
-Add your postgres credentials and make sure to create given database before running the application.
-
-- Running application inside docker (postgres and node):
-
-Set `POSTGRES_HOST` to `iris-postgres-development` for `.env.development` and `iris-postgres-test` for `.env.test` file. It is the name of the postgres container inside docker-compose file. Docker Compose will start the postgres container for you, create the database and host alias for you.
-
-- Running application locally (node) but postgres is running inside docker:
-
-Set `POSTGRES_HOST` to `localhost` for `.env.development` and `localhost` for `.env.test` file. Docker compose is configured to expose postgres container to your localhost.
-
-## What to do when add new ENV VARIABLES
-
-There are several things you need to do when you add new ENV VARIABLES:
-- Add them to `.env.example` file
-- Add them to your local `.env.development` and `.env.test` files
-- Add them to your docker-compose.yml file (just the name, not the value). Only envs listed in the environment section will be exposed to your docker container.
-- Add them (prod version) to your github repo secrets. They will be used to generate the `.env` file on deploy.
-- Add them (prod version) to test.yml file on .github/workflows/test.yml.
