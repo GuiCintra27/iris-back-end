@@ -2,8 +2,9 @@
 
 API for Iniciativa Íris.
 
-The website is available at: https://iniciativa-iris.vercel.app/ <br/>
-(The site is still under development, and is maintained by free means, so for the first contact with the server information there may be some delay)
+The website is available at: https://iniciativa-iris.vercel.app/ 
+
+The website is still under development, and is maintained by free means, so for the first contact with the server information there may be some delay
 
 ## About
 
